@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiyatavı — Oyun Fiyat Karşılaştırma</title>
+  <meta name="description" content="Oyunların hangi mağazada ne fiyata satıldığını tek yerde karşılaştır.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">Fiyat<span>avı</span></a>
+      <nav>
+        <a href="#firsatlar">Fırsatlar</a>
+        <a href="#hakkinda">Hakkında</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Oyunu ara, en ucuz mağazayı bul.</h1>
+      <p>Steam, GOG, Epic, Humble ve daha fazla mağazadaki güncel fiyatlar tek ekranda.</p>
+      <form id="search-form" class="search" autocomplete="off">
+        <input id="search-input" type="search" placeholder="Örn: Cyberpunk 2077" aria-label="Oyun ara" required>
+        <button type="submit">Ara</button>
+      </form>
+      <p id="status" class="status" role="status"></p>
+    </section>
+
+    <section id="results-section" hidden>
+      <h2>Arama sonuçları</h2>
+      <div id="results" class="grid"></div>
+    </section>
+
+    <section id="detail-section" hidden>
+      <button id="back-btn" class="back">← Sonuçlara dön</button>
+      <div id="detail"></div>
+    </section>
+
+    <section id="firsatlar">
+      <h2>Günün fırsatları</h2>
+      <div id="deals" class="grid"></div>
+    </section>
+
+    <section id="hakkinda" class="about">
+      <h2>Hakkında</h2>
+      <p>Fiyatavı, Mesleki Çözümleme I dersi kapsamında geliştirilen bir oyun fiyat karşılaştırma sitesidir.
+        Fiyat verileri <a href="https://www.cheapshark.com" target="_blank" rel="noopener">CheapShark API</a>
+        üzerinden anlık olarak çekilir. Fiyatlar ABD doları (USD) cinsindendir.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">© 2026 Mehmet Yağız Altunsoy · Fiyatavı</div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
