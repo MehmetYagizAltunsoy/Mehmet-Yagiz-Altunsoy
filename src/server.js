@@ -4,9 +4,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { db } from "./db.js";
 import { runSync, COUNTRIES, ensureHistory, ensureInfo, syncPricesFor, searchRemote, startBackgroundWork, HISTORY_MONTHS,
-  ensureRating, queuePriority, spotlightMedia, findGameByTitle, ensureDetails, ensureAppids } from "./sync.js";
+  ensureRating, queuePriority, spotlightMedia, ensureDetails, ensureAppids } from "./sync.js";
 import { CATEGORIES } from "./steamspy.js";
-import { checkAI, aiAvailable, aiModel, suggestGames } from "./ai.js";
 import {
   hashPassword, verifyPassword, createSession, destroySession, cleanupSessions,
   sessionCookie, attachUser, requireUser, tooManyAttempts,
@@ -244,28 +243,6 @@ app.get("/api/games/:id/similar", (req, res) => {
   res.json(data);
 });
 
-// Yapay zekâ: anlatılan oyunu bul
-app.post("/api/ai/find", async (req, res) => {
-  const country = COUNTRIES.includes(String(req.body?.country).toUpperCase()) ? String(req.body.country).toUpperCase() : "US";
-  const text = String(req.body?.text || "").trim();
-  const lang = req.body?.lang === "en" ? "en" : "tr";
-  if (text.length < 8) return res.status(400).json({ code: "short" });
-  if (!aiAvailable() && !(await checkAI())) return res.status(503).json({ code: "ai_off" });
-  if (tooManyAttempts("ai:" + req.ip)) return res.status(429).json({ code: "rate" });
-  let ideas;
-  try { ideas = await suggestGames(text, lang); }
-  catch (e) { console.error("  yapay zekâ:", e.message); return res.status(502).json({ code: "ai_error" }); }
-  const out = [], seen = new Set();
-  for (const idea of ideas) {
-    const id = await findGameByTitle(idea.title, country);
-    if (!id || seen.has(id)) continue;
-    seen.add(id);
-    const r = db.prepare(`SELECT ${LIST_COLS}, ${OTHER_COL} FROM games g LEFT JOIN lows l ON l.game_id = g.id AND l.country = ? WHERE g.id = ?`).get(country, country, id);
-    if (r) out.push({ ...listItem(r), why: idea.why });
-  }
-  res.json({ games: out, model: aiModel() });
-});
-
 // Oyun sayfası: bilgi, tüm mağaza fiyatları ve 3 aylık geçmiş (eksikse o an çekilir)
 const priceTried = new Set();
 app.get("/api/games/:id", async (req, res) => {
@@ -317,7 +294,6 @@ app.get("/api/config", (_req, res) => {
     email: process.env.SUPPORT_EMAIL || "",
     instagram: (process.env.SUPPORT_INSTAGRAM || "").replace(/^@/, ""),
     stats: statsCache.data,
-    ai: aiAvailable(),
     controller: process.env.CONTROLLER_NAME || "",
     rates: currentRates(),
   });
@@ -540,8 +516,6 @@ async function tick() {
 const port = Number(process.env.PORT || 3000);
 const httpServer = app.listen(port, () => {
   console.log(`${process.env.SITE_NAME || "Fiyatavı"} çalışıyor → http://localhost:${port}`);
-  checkAI();
-  setInterval(checkAI, 5 * 60_000);
   tick();
   setInterval(tick, Number(process.env.SYNC_MINUTES || 60) * 60_000);
 });

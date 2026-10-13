@@ -10,10 +10,7 @@ PC oyunlarının fiyatlarını Steam, Epic Games Store, GOG, Microsoft Store ve 
 - Kategoriler (aksiyon, macera, bulmaca…), mağaza filtresi, sadece indirimdekiler
 - Steam oyuncu puanları; çok satan, en çok favorilenen ve en yüksek puanlı sıralamaları
 - Seçilen bölgede fiyatı olmayan oyunlarda diğer bölgelerin fiyatları
-- Yapay zekâ ile oyun bulma: adını bilmediğin oyunu anlat, bulsun (Ollama)
 - "Şu an ücretsiz" oyunlar, benzer oyun önerileri, güncel kurla yaklaşık fiyat karşılıkları
-
-Yol haritası için: [YAPILACAKLAR.md](YAPILACAKLAR.md)
 - Son 3 ayın fiyat grafiği, 3 ayın ve tüm zamanların en düşük fiyatı
 - Arama, A–Z filtresi, sıralama (popüler, ucuzdan pahalıya, en yüksek indirim, en yeni…)
 - Üyelik sistemi (e-posta doğrulama, şifremi unuttum), istek listesi, istek listesine eklemede ve fiyat düşüşünde mail bildirimi
@@ -40,7 +37,6 @@ Oyun adları hiçbir dilde çevrilmez, her zaman orijinal hâliyle gösterilir.
 | Fiyat verisi | [IsThereAnyDeal API](https://docs.isthereanydeal.com/) |
 | Oyun listesi, kapaklar, puanlar, fragmanlar | [Steam Web API](https://steamcommunity.com/dev) ve Steam mağazası |
 | Kategoriler ve tahmini satışlar | [SteamSpy](https://steamspy.com/api.php) |
-| Yapay zekâ | [Ollama](https://ollama.com) (bilgisayarda çalışan yerel model) |
 
 ## Kurulum
 
@@ -54,14 +50,6 @@ npm install
 npm run kurulum   # anahtarları ve site bilgilerini sorar, .env dosyasını oluşturur
 npm start         # http://localhost:3000
 ```
-
-### Yapay zekâ (isteğe bağlı)
-
-1. [Ollama](https://ollama.com)'yı kur.
-2. `ollama pull gemma3:4b` (yaklaşık 3 GB; başka model için `npm run kurulum`).
-3. `npm start` — Ollama açıksa arama çubuğunda "Yapay zekâyla bul" düğmesi görünür.
-
-Yapay zekânın önerdiği oyunlar yalnızca gerçekten bulunabiliyorsa gösterilir; uydurulan adlar elenir.
 
 ## Komutlar
 
@@ -88,7 +76,6 @@ Gizli bilgiler `.env` dosyasında durur ve GitHub'a yüklenmez (`.gitignore`). �
 | `CONTROLLER_NAME` | KVKK metinlerindeki veri sorumlusu |
 | `SMTP_*`, `MAIL_FROM` | Mail gönderimi (boşsa mailler terminale yazılır) |
 | `SHOPS_HIDE` | Sitede gösterilmeyecek mağazalar (virgülle) |
-| `OLLAMA_URL`, `OLLAMA_MODEL` | Yapay zekâ için Ollama adresi ve modeli |
 
 ## Proje yapısı
 
@@ -103,7 +90,6 @@ fiyatavi/
 │   ├── shops.js        Mağaza erişim kontrolü
 │   ├── steamspy.js     Kategoriler ve tahmini satışlar
 │   ├── steamstore.js   Steam puanları ve fragmanlar
-│   ├── ai.js           Yapay zekâ (Ollama) ile oyun bulma
 │   ├── rates.js        Güncel döviz kurları
 │   ├── db.js           Veri tabanı şeması
 │   ├── auth.js         Giriş sistemi ve oturumlar

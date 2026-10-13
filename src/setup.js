@@ -94,23 +94,6 @@ await textStep("Veri sorumlusu", "CONTROLLER_NAME");
 console.log("Maillerdeki bağlantıların doğru çalışması için sitenin adresi (şimdilik http://localhost:3000, yayına alınca alan adın):");
 await textStep("Site adresi", "SITE_URL", "http://localhost:3000");
 
-console.log("\n--- Yapay zekâ ile oyun bulma (isteğe bağlı) ---");
-console.log("Adını bilmediği oyunu anlatarak bulmak için Ollama kullanılır. Ücretsiz: https://ollama.com");
-await textStep("Ollama modeli", "OLLAMA_MODEL", "gemma3:4b");
-{
-  const base = (get("OLLAMA_URL") || "http://127.0.0.1:11434").replace(/\/$/, "");
-  const model = get("OLLAMA_MODEL") || "gemma3:4b";
-  try {
-    const r = await fetch(`${base}/api/tags`, { signal: AbortSignal.timeout(3000) });
-    const names = ((await r.json()).models ?? []).map((m) => m.name);
-    const want = model.includes(":") ? model : `${model}:latest`;
-    console.log(names.includes(want)
-      ? `✓ Ollama çalışıyor ve "${model}" modeli yüklü.`
-      : `! Ollama çalışıyor ama "${model}" modeli yüklü değil. Yeni bir terminalde şunu yaz:  ollama pull ${model}`);
-  } catch {
-    console.log("! Ollama şu an çalışmıyor. Kurup açtığında site bunu kendiliğinden fark eder (kurmazsan site yine çalışır, sadece yapay zekâ düğmesi görünmez).");
-  }
-}
 
 console.log("\n✓ Kurulum bitti. Şimdi şunu yaz:  npm start\n");
 rl.close();

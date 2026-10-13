@@ -218,15 +218,6 @@ section{padding:22px 0}
 .card .elsewhere{font-size:12px;color:var(--muted)}
 .card .elsewhere b{color:var(--text);font-family:var(--display)}
 
-/* ---------- yapay zekâ ---------- */
-.ai-btn{flex:none;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:9px;border:0;cursor:pointer;font:600 13px var(--body);
-  color:var(--on-coin);background:linear-gradient(135deg,var(--coin-bg),var(--coin-bg2))}
-.ai-box textarea{width:100%;min-height:110px;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px;resize:vertical;font:inherit;color:inherit}
-.ai-res{display:grid;gap:10px;margin-top:14px}
-.ai-item{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px;cursor:pointer}
-.ai-item:hover{border-color:var(--coin)}
-.ai-item .cov{height:84px;border-radius:8px;font-size:0;padding:0}
-.ai-item b{font:600 16px var(--display)} .ai-item p{margin:3px 0 0;font-size:13.5px;color:var(--muted)}
 .spin{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -519,7 +510,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
       <label for="q" class="sr" data-i="search"></label>
       <input id="q" type="search" autocomplete="off" enterkeyhint="search">
       <button class="clear" id="qClear" hidden aria-label="Temizle">✕</button>
-      <button class="ai-btn" id="aiBtn" hidden><svg class="i" style="width:15px;height:15px" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6zM19 14l.9 2.6 2.6.9-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9zM5 15l.7 1.8 1.8.7-1.8.7L5 20l-.7-1.8-1.8-.7 1.8-.7z"/></svg><span data-i="aiBtn"></span></button>
     </div>
     <div class="actions">
       <button class="icon" id="themeBtn"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
@@ -622,12 +612,6 @@ const I18N={
   elsewhereTitle:"Başka bölgelerdeki fiyatlar",elsewhereNote:"Bu oyunun seçtiğin bölgede fiyatı yok. Diğer bölgelerdeki en ucuz fiyatlar:",region:"Bölge",
   ratingLabel:"Steam puanı",reviews:"{n} değerlendirme",
   r1:"Olağanüstü olumlu",r2:"Çok olumlu",r3:"Çoğunlukla olumlu",r4:"Karışık",r5:"Çoğunlukla olumsuz",r6:"Olumsuz",
-  aiBtn:"Yapay zekâyla bul",aiTitle:"Oyunu anlat, biz bulalım",
-  aiLead:"Adını hatırlamadığın oyunu anlat: türü, hikâyesi, karakterleri, nasıl göründüğü, ne zaman oynadığın… Yapay zekâ tahmin eder, biz de fiyatlarını getiririz.",
-  aiPh:"Örn: Yağmurlu bir şehirde geçen, köpeğiyle dolaşan bir dedektifin olduğu, 2015 civarı çıkmış bir oyun…",
-  aiAsk:"Bul",aiThinking:"Yapay zekâ düşünüyor… Bilgisayarının hızına göre biraz sürebilir.",
-  aiNone:"Anlattığına uyan bir oyun bulamadım. Biraz daha ayrıntı ekleyip tekrar dene.",aiOff:"Yapay zekâ şu an kapalı.",
-  aiErr:"Yapay zekâdan cevap alınamadı, tekrar dene.",aiShort:"Biraz daha ayrıntı yaz.",aiNote:"Öneriler yapay zekâ tahminidir, yanılabilir.",
   sStore:"Tercih ettiğim mağaza",sAutoslide:"İndirim vitrini kendiliğinden kaysın",toTop:"Başa dön",approxTitle:"Güncel kurla yaklaşık karşılık; mağazanın kendi kuru farklı olabilir",freeTitle:"Şu an ücretsiz",freeSub:"Kısa süreliğine bedava; kaçırma",freeNow:"Ücretsiz",freeUntil:"{d} tarihine kadar",freeNoEnd:"Bitiş tarihi belirtilmemiş",simTitle:"Benzer oyunlar",slideOff:"-%{p} indirim",prevSlide:"Önceki oyun",nextSlide:"Sonraki oyun",
   privacy:"Gizlilik Politikası",kvkk:"KVKK Aydınlatma Metni",cookiesTitle:"Çerezler",details:"Ayrıntılar",ok:"Tamam",
   cookieText:"Bu site yalnızca çalışması için gerekli çerezleri kullanır; reklam ya da takip çerezi yoktur.",
@@ -719,12 +703,6 @@ const I18N={
   elsewhereTitle:"Prices in other regions",elsewhereNote:"This game has no price in your region. Cheapest prices elsewhere:",region:"Region",
   ratingLabel:"Steam rating",reviews:"{n} reviews",
   r1:"Overwhelmingly positive",r2:"Very positive",r3:"Mostly positive",r4:"Mixed",r5:"Mostly negative",r6:"Negative",
-  aiBtn:"Find with AI",aiTitle:"Describe the game, we'll find it",
-  aiLead:"Describe a game you can't remember the name of: genre, story, characters, how it looked, when you played it… The AI guesses and we fetch the prices.",
-  aiPh:"E.g. a detective walking around a rainy city with his dog, came out around 2015…",
-  aiAsk:"Find",aiThinking:"The AI is thinking… This can take a moment depending on your computer.",
-  aiNone:"I couldn't find a matching game. Add a few more details and try again.",aiOff:"The AI is off right now.",
-  aiErr:"Couldn't get an answer from the AI, try again.",aiShort:"Write a bit more detail.",aiNote:"Suggestions are AI guesses and may be wrong.",
   sStore:"Preferred store",sAutoslide:"Auto-advance the deals showcase",toTop:"Back to top",approxTitle:"Approximate amount at today's exchange rate; the store's own rate may differ",freeTitle:"Free right now",freeSub:"Free for a limited time; don't miss it",freeNow:"Free",freeUntil:"Until {d}",freeNoEnd:"No end date given",simTitle:"Similar games",slideOff:"{p}% off",prevSlide:"Previous game",nextSlide:"Next game",
   privacy:"Privacy Policy",kvkk:"Personal Data Notice",cookiesTitle:"Cookies",details:"Details",ok:"OK",
   cookieText:"This site only uses cookies needed for it to work; no advertising or tracking cookies.",
@@ -930,7 +908,6 @@ async function loadDeals(){
 async function loadConfig(){
   try{state.config={...state.config,...(await api("/api/config"))}}catch(e){}
   document.querySelectorAll(".site-name").forEach(el=>el.textContent=state.config.siteName);
-  $("aiBtn").hidden=!state.config.ai;
   if(state.config.rates){renderGrid();renderDeals();renderFree()}
   document.title=`${state.config.siteName} — ${t("tagline")}`;
   renderStats();
@@ -1582,39 +1559,6 @@ function setLang(l){
 function setSort(s){state.sort=s;store.set("g_sort",s);$("sort").value=s;loadList(true)}
 function setShop(v){state.shop=v;store.set("g_shop",v);renderShops();loadList(true);loadDeals()}
 
-/* ================= Yapay zekâ ile oyun bulma ================= */
-function openAI(){
-  state.open="__ai";
-  $("dlgBody").innerHTML=`
-   <div class="dlg-head"><h2>${t("aiTitle")}</h2><button class="x" data-close aria-label="${t("close")}">✕</button></div>
-   <div class="ai-box">
-    <p class="note" style="margin-top:0">${t("aiLead")}</p>
-    <textarea id="aiText" maxlength="800" placeholder="${esc(t("aiPh"))}"></textarea>
-    <div class="row" style="justify-content:space-between"><span class="note">${t("aiNote")}</span><button class="btn primary" id="aiGo">${t("aiAsk")}</button></div>
-    <div id="aiOut"></div>
-   </div>`;
-  const go=async()=>{
-    const text=$("aiText").value.trim();
-    if(text.length<8){$("aiOut").innerHTML=`<p class="note">${t("aiShort")}</p>`;return}
-    $("aiGo").disabled=true;
-    $("aiOut").innerHTML=`<p class="note"><span class="spin"></span> ${t("aiThinking")}</p>`;
-    try{
-      const d=await api("/api/ai/find",{method:"POST",body:{text,country:countryCode(),lang:state.lang}});
-      remember(d.games);
-      $("aiOut").innerHTML=d.games.length?`<div class="ai-res">${d.games.map(g=>`<button class="ai-item" data-g="${g.id}">${cover(g)}<div style="min-width:0"><b>${esc(g.title)}</b>${g.why?`<p>${esc(g.why)}</p>`:""}</div><div>${g.low?tag(g.low):g.rating?rateBadge(g.rating):""}</div></button>`).join("")}</div>`
-        :`<p class="note">${t("aiNone")}</p>`;
-    }catch(e){
-      $("aiOut").innerHTML=`<p class="note">${t({ai_off:"aiOff",short:"aiShort",rate:"errRate"}[e.code]||"aiErr")}</p>`;
-      if(e.code==="ai_off"){state.config.ai=false;$("aiBtn").hidden=true}
-    }
-    if($("aiGo"))$("aiGo").disabled=false;
-  };
-  $("aiGo").onclick=go;
-  $("aiText").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.ctrlKey||e.metaKey))go()});
-  openDialog(false);
-  setTimeout(()=>$("aiText").focus(),40);
-}
-
 /* ================= Yardım ================= */
 function openHelp(){
   state.open="__help";
@@ -1734,7 +1678,6 @@ $("sort").addEventListener("change",e=>setSort(e.target.value));
 $("onlyDeals").addEventListener("change",e=>{state.onlyDeals=e.target.checked;loadList(true)});
 $("shop").addEventListener("change",e=>setShop(e.target.value));
 $("cats").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;state.cat=b.dataset.cat||null;renderCats();loadList(true)});
-$("aiBtn").addEventListener("click",openAI);
 $("themeBtn").addEventListener("click",()=>setTheme(effectiveTheme()==="dark"?"light":"dark"));
 $("helpBtn").addEventListener("click",openHelp);
 $("footHelp").addEventListener("click",openHelp);

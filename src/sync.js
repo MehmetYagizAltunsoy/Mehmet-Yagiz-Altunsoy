@@ -499,26 +499,6 @@ export async function spotlightMedia(candidates) {
   return withPoster;   // hiçbirinin fragmanı yoksa en azından görseliyle göster
 }
 
-/* ---------- 9) Yapay zekânın önerdiği adı sitedeki oyunla eşleştir ---------- */
-export async function findGameByTitle(title, country) {
-  const exact = db.prepare("SELECT id FROM games WHERE hidden = 0 AND title = ? COLLATE NOCASE").get(title);
-  if (exact) return exact.id;
-  try {
-    const res = (await itad.search(title, 5)) ?? [];
-    const g = res.find((x) => (!x.type || x.type === "game") && !x.mature);
-    if (g) {
-      if (insGame.run(g.id, g.slug ?? null, g.title, g.type ?? null).changes) {
-        if (g.assets?.boxart) db.prepare("UPDATE games SET boxart = ? WHERE id = ? AND boxart IS NULL").run(g.assets.boxart, g.id);
-        await syncPricesFor([g.id], [country]);
-        queuePriority([g.id]);
-      }
-      return g.id;
-    }
-  } catch (e) { console.warn("  yapay zekâ eşleme:", e.message); }
-  const like = db.prepare(`SELECT id FROM games WHERE hidden = 0 AND title LIKE ? ORDER BY popular_rank IS NULL, popular_rank LIMIT 1`).get(`%${title}%`);
-  return like?.id ?? null;
-}
-
 /* ---------- Ana döngü ---------- */
 
 export async function runSync() {
