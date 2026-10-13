@@ -1,0 +1,28 @@
+{
+  "name": "fiyatavi",
+  "version": "0.12.2",
+  "description": "PC oyun fiyatlarını mağazalar ve bölgeler arasında karşılaştıran, fiyat düşünce mail atan web sitesi.",
+  "keywords": [
+    "oyun",
+    "fiyat karşılaştırma",
+    "steam",
+    "isthereanydeal",
+    "game prices"
+  ],
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "kurulum": "node src/setup.js",
+    "start": "node src/server.js",
+    "sync": "node src/sync.js",
+    "kontrol": "node src/kontrol.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "nodemailer": "^7.0.7"
+  }
+}

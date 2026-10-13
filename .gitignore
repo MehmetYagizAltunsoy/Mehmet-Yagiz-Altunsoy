@@ -1,0 +1,18 @@
+# Paketler (npm install ile yeniden kurulur)
+node_modules/
+
+# Gizli ayarlar: API anahtarları, mail şifresi — ASLA yüklenmemeli
+.env
+
+# Veri tabanı (kullanıcı hesapları, fiyatlar)
+*.db
+*.db-wal
+*.db-shm
+
+# Sistem ve düzenleyici dosyaları
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+npm-debug.log*

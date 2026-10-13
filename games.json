@@ -1,0 +1,20 @@
+[
+  { "title": "Elden Ring", "steamAppId": 1245620 },
+  { "title": "Cyberpunk 2077", "steamAppId": 1091500 },
+  { "title": "Hades II", "steamAppId": 1145350 },
+  { "title": "Baldur's Gate 3", "steamAppId": 1086940 },
+  { "title": "Stardew Valley", "steamAppId": 413150 },
+  { "title": "Red Dead Redemption 2", "steamAppId": 1174180 },
+  { "title": "Hollow Knight", "steamAppId": 367520 },
+  { "title": "The Witcher 3: Wild Hunt", "steamAppId": 292030 },
+  { "title": "Sekiro: Shadows Die Twice", "steamAppId": 814380 },
+  { "title": "Celeste", "steamAppId": 504230 },
+  { "title": "Disco Elysium", "steamAppId": 632470 },
+  { "title": "Forza Horizon 5", "steamAppId": 1551360 },
+  { "title": "It Takes Two", "steamAppId": 1426210 },
+  { "title": "Terraria", "steamAppId": 105600 },
+  { "title": "Dave the Diver", "steamAppId": 1868140 },
+  { "title": "Balatro", "steamAppId": 2379780 },
+  { "title": "Portal 2", "steamAppId": 620 },
+  { "title": "Lies of P", "steamAppId": 1627720 }
+]
