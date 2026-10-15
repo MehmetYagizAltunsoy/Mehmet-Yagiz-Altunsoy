@@ -112,7 +112,6 @@ function buildQuery(req, country) {
   if (q) { where.push("g.title LIKE ? ESCAPE '\\'"); args.push(`%${q.replace(/[\\%_]/g, (c) => "\\" + c)}%`); }
   if (letter) { where.push("upper(substr(g.title, 1, 1)) = ?"); args.push(letter); }
   if (cat) { where.push("EXISTS (SELECT 1 FROM game_tags t WHERE t.game_id = g.id AND t.tag = ?)"); args.push(cat); }
-  // çevrimiçi / çevrimdışı oyun filtresi
   return { from: `FROM games g ${join} WHERE ${where.join(" AND ")}`, args, cols };
 }
 

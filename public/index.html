@@ -786,7 +786,7 @@ const state={
   lang:store.get("g_lang",(navigator.language||"tr").startsWith("tr")?"tr":"en"),
   cur:store.get("g_cur",guessCurrency()),
   theme:store.get("g_theme","system"),
-  sort:store.get("popular"),
+  sort:store.get("g_sort","popular"),
   showAll:store.get("g_all",false),
   shop:store.get("g_shop",""),accent:store.get("g_accent","gold"),onlyDeals:false,cat:null,shops:[],cats:[],
   autoslide:store.get("g_autoslide",true),targets:{},
