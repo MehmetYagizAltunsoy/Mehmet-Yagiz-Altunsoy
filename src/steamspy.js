@@ -12,7 +12,7 @@ export const CATEGORIES = [
   ["Casual", "Rahat", "Casual"], ["Indie", "Bağımsız", "Indie"],
 ];
 
-// Çevrimiçi / çevrimdışı filtresi için kullanılan Steam etiketleri (kategori düğmesi olarak gösterilmez)
+// SteamSpy'dan çekilecek etiketler: sitedeki kategoriler
 export const FETCH_TAGS = CATEGORIES.map((c) => c[0]);
 
 // "1,000,000 .. 2,000,000" → 1500000
