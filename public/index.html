@@ -111,6 +111,9 @@ header.top.compact .icon{width:34px;height:34px}
 .btn.primary{background:var(--coin-bg);color:var(--on-coin);border-color:transparent;font-weight:600}
 .btn.primary:hover{filter:brightness(1.05)}
 .btn.ghost{background:transparent}
+.copylink{height:36px;font-size:14px;color:var(--muted)}
+.copylink svg{width:16px;height:16px}
+.copylink:hover{color:var(--text);border-color:var(--coin)}
 .btn.danger{color:var(--up);border-color:color-mix(in srgb,var(--up) 45%,var(--line))}
 .btn:disabled{opacity:.5;cursor:default}
 .wishcount{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:10px;background:var(--coin-bg);color:var(--on-coin);font-size:12px;font-weight:600;padding:0 5px}
@@ -644,6 +647,7 @@ const I18N={
   addWish:"İstek listesine ekle",removeWish:"İstek listesinden çıkar",loginToWish:"İstek listesi için giriş yap",remove:"Çıkar",
   close:"Kapat",email:"E-posta",password:"Şifre",name:"Kullanıcı adı",register:"Kayıt ol",signin:"Giriş yap",
   consentPre:"",consentPost:"'ni okudum, kişisel verilerimin bu metinde anlatıldığı şekilde işlenmesini kabul ediyorum.",errConsent:"Devam etmek için KVKK Aydınlatma Metni'ni onaylaman gerekiyor.",
+  copyLink:"Linki kopyala",linkCopied:"Oyunun bağlantısı kopyalandı.",gameNotFound:"Bu oyun bulunamadı.",
   errFill:"E-posta ve şifreyi doldur.",errPass:"Şifre en az 6 karakter olmalı.",errExists:"Bu e-posta ile zaten bir hesap var. Giriş yap sekmesini kullan.",
   errWrong:"E-posta ya da şifre hatalı.",errEmail:"Geçerli bir e-posta adresi yaz.",errRate:"Çok fazla deneme yapıldı. 15 dakika sonra tekrar dene.",errServer:"Bir sorun oluştu, tekrar dene.",
   welcome:"Hoş geldin, {n}!",added:"{g} istek listene eklendi. {e} adresine bildirim gönderildi.",
@@ -735,6 +739,7 @@ const I18N={
   addWish:"Add to wishlist",removeWish:"Remove from wishlist",loginToWish:"Sign in to use your wishlist",remove:"Remove",
   close:"Close",email:"Email",password:"Password",name:"Username",register:"Create account",signin:"Sign in",
   consentPre:"I have read the ",consentPost:" and agree to my personal data being processed as described there.",errConsent:"Please accept the Personal Data Notice to continue.",
+  copyLink:"Copy link",linkCopied:"Link to the game copied.",gameNotFound:"This game could not be found.",
   errFill:"Enter your email and password.",errPass:"Password needs at least 6 characters.",errExists:"An account with this email already exists. Use the Sign in tab.",
   errWrong:"Email or password is incorrect.",errEmail:"Enter a valid email address.",errRate:"Too many attempts. Try again in 15 minutes.",errServer:"Something went wrong. Try again.",
   welcome:"Welcome, {n}!",added:"{g} added to your wishlist. A notification was sent to {e}.",
@@ -1211,16 +1216,51 @@ function chart(d){
 /* ================= Oyun sayfası ================= */
 const dlg=$("dlg");
 const detailKey=id=>id+":"+state.cur;
-function openDialog(wide){dlg.classList.toggle("wide",!!wide);if(!dlg.open)dlg.showModal();dlg.scrollTop=0;$("dlgBody").scrollTop=0}
+function openDialog(wide){dlg.classList.toggle("wide",!!wide);if(!dlg.open)dlg.showModal();dlg.scrollTop=0;$("dlgBody").scrollTop=0;syncUrl()}
+/* ================= Paylaşılabilir oyun adresi: /oyun/<kısa ad> ================= */
+const gamePath=g=>"/oyun/"+encodeURIComponent(g.slug||g.id);
+const isGameOpen=()=>state.open&&!String(state.open).startsWith("__");
+// adres çubuğu açık olan oyunu gösterir; pencere kapanınca ana sayfaya döner
+let urlReplace=false;
+function syncUrl(replace=urlReplace){
+  const g=isGameOpen()?state.known[state.open]:null;
+  const want=g?gamePath(g):"/";
+  if(location.pathname===want)return;
+  if(g&&!replace)history.pushState({game:g.id},"",want);else history.replaceState(g?{game:g.id}:{},"",want);
+}
+// sayfa doğrudan /oyun/... adresiyle açıldıysa oyunu getirip göster
+async function openFromPath(){
+  if(!location.pathname.startsWith("/oyun/"))return false;
+  const key=decodeURIComponent(location.pathname.slice(6));
+  try{
+    const d=await api(`/api/games/${encodeURIComponent(key)}?country=${countryCode()}`);
+    remember([{...d.game,tags:d.game.tags.slice(0,2)}]);
+    state.details[detailKey(d.game.id)]=d.game;
+    await openGame(d.game.id,true);
+  }catch(e){history.replaceState({},"","/");toast(t("gameNotFound"))}
+  return true;
+}
+async function copyGameLink(id){
+  const url=location.origin+gamePath(state.known[id]||{id});
+  try{await navigator.clipboard.writeText(url)}
+  catch(e){const ta=document.createElement("textarea");ta.value=url;document.body.append(ta);ta.select();document.execCommand("copy");ta.remove()}
+  toast(t("linkCopied"));
+}
+window.addEventListener("popstate",()=>{
+  if(location.pathname.startsWith("/oyun/")){
+    const id=history.state?.game;
+    if(id&&state.known[id]){state.open=id;renderDetail(id);openDialog(true)}else openFromPath();
+  }else if(dlg.open&&isGameOpen())dlg.close();
+});
 async function loadSimilar(id){
   const key=detailKey(id);
   if(state.similar[key])return;
   try{state.similar[key]=remember((await api(`/api/games/${encodeURIComponent(id)}/similar?country=${countryCode()}`)).games)}catch(e){state.similar[key]=[]}
   if(state.open===id&&dlg.open)renderDetail(id);
 }
-async function openGame(id){
+async function openGame(id,replaceUrl=false){
   state.open=id;
-  renderDetail(id);openDialog(true);
+  renderDetail(id);urlReplace=replaceUrl;openDialog(true);urlReplace=false;
   const key=detailKey(id);
   if(state.details[key])return;
   try{
@@ -1260,7 +1300,7 @@ function renderDetail(id){
     if(d.requirements)chartPanel+=reqPanel(d.requirements);
   }
   $("dlgBody").innerHTML=`
-   <div class="dlg-head"><div></div><button class="x" data-close aria-label="${t("close")}">✕</button></div>
+   <div class="dlg-head"><button class="btn ghost copylink" data-copy-link="${esc(id)}"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>${t("copyLink")}</button><button class="x" data-close aria-label="${t("close")}">✕</button></div>
    <div class="dh">${cover(g)}
     <div>
      <h2>${esc(g.title)}</h2>
@@ -1647,6 +1687,7 @@ document.addEventListener("click",e=>{
   const sl=e.target.closest("[data-slide]");if(sl){goSlide(slideIdx+Number(sl.dataset.slide));startSlides();return}
   const dt=e.target.closest("[data-dot]");if(dt){goSlide(Number(dt.dataset.dot));startSlides();return}
   const g=e.target.closest("[data-g]");if(g)return openGame(g.dataset.g);
+  const cl=e.target.closest("[data-copy-link]");if(cl)return copyGameLink(cl.dataset.copyLink);
   if(e.target.closest("[data-close]"))return dlg.close();
   if(e.target.closest("[data-close2]"))return $("dlg2").close();
   const lg=e.target.closest("[data-legal]");if(lg){e.preventDefault();return openLegal(lg.dataset.legal)}
@@ -1670,7 +1711,7 @@ $("show").addEventListener("pointerdown",e=>{if(e.pointerType!=="mouse")swipeX=e
 $("show").addEventListener("pointerup",e=>{if(swipeX==null)return;const dx=e.clientX-swipeX;swipeX=null;if(Math.abs(dx)>50){goSlide(slideIdx+(dx<0?1:-1));startSlides()}});
 $("grid").addEventListener("pointerout",e=>{if(!e.relatedTarget||!e.target.closest(".card")?.contains(e.relatedTarget))tiltReset(e)});
 dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
-dlg.addEventListener("close",()=>{state.open=null});
+dlg.addEventListener("close",()=>{state.open=null;syncUrl()});
 $("q").addEventListener("input",e=>{state.q=e.target.value;onSearchInput()});
 $("qClear").addEventListener("click",()=>{$("q").value="";state.q="";onSearchInput();$("q").focus()});
 $("cur").addEventListener("change",e=>setCurrency(e.target.value));
@@ -1781,7 +1822,7 @@ function maybeCookieBar(){
 renderAll();
 loadConfig();
 load();
-loadUser().then(async()=>{const handled=await handleLinks();if(!handled)maybeWelcome();maybeCookieBar()});
+loadUser().then(async()=>{const handled=await handleLinks()||await openFromPath();if(!handled)maybeWelcome();maybeCookieBar()});
 loadCats();
 setTimeout(renderBackdrop,400);
 // açık sayfada fiyatları 10 dk'da bir tazele (kullanıcı listede aşağı inmemişse)

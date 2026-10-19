@@ -24,6 +24,8 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.json({ limit: "10kb" }));
 app.use(attachUser);
 app.use(express.static(path.join(root, "..", "public")));
+// Paylaşılabilir oyun adresi: /oyun/<kısa ad>. Sayfa aynı, oyunu tarayıcıdaki kod açar.
+app.get("/oyun/:key", (_req, res) => res.sendFile(path.join(root, "..", "public", "index.html")));
 
 /* ---------- Oyunlar ve fiyatlar ---------- */
 const PAGE_SIZE = 60;
@@ -44,7 +46,7 @@ const validCountry = (req) => {
 };
 
 // Liste satırı: kart için gereken bilgiler
-const GAME_COLS = `g.id, g.title, g.boxart, g.appid, g.release_date, g.tags, g.popular_rank, g.free,
+const GAME_COLS = `g.id, g.slug, g.title, g.boxart, g.appid, g.release_date, g.tags, g.popular_rank, g.free,
   g.rating_pos, g.rating_neg, g.last_priced`;
 const LOW_COLS = `l.shop AS l_shop, l.price AS l_price, l.regular AS l_regular, l.currency AS l_currency,
   l.cut AS l_cut, l.expiry AS l_expiry, l.low_m3 AS l_m3, l.low_all AS l_all`;
@@ -58,6 +60,7 @@ function listItem(r) {
   const [oc, os, op, ocur] = String(r.other ?? "").split("|");
   return {
     id: r.id,
+    slug: r.slug ?? null,
     title: r.title,
     boxart: r.boxart,
     appid: r.appid,
@@ -247,8 +250,13 @@ const priceTried = new Set();
 app.get("/api/games/:id", async (req, res) => {
   const country = validCountry(req);
   if (!country) return res.status(400).json({ code: "country" });
-  const id = req.params.id;
-  if (!qGame.get(id)) return res.status(404).json({ code: "game" });
+  // adres oyunun kimliği ya da kısa adı (slug) olabilir: /oyun/elden-ring
+  let id = req.params.id;
+  if (!qGame.get(id)) {
+    const bySlug = db.prepare("SELECT id FROM games WHERE slug = ? AND hidden = 0").get(id);
+    if (!bySlug) return res.status(404).json({ code: "game" });
+    id = bySlug.id;
+  }
   markViewed.run(id);
   const qDaily = db.prepare(`SELECT day, lowest, currency FROM price_history
     WHERE game_id = ? AND country = ? AND day >= date('now', ?) ORDER BY day`);

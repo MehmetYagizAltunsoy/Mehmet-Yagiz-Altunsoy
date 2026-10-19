@@ -10,6 +10,7 @@ PC oyunlarının fiyatlarını Steam, Epic Games Store, GOG, Microsoft Store ve 
 - Kategoriler (aksiyon, macera, bulmaca…), mağaza filtresi, sadece indirimdekiler
 - Steam oyuncu puanları; çok satan, en çok favorilenen ve en yüksek puanlı sıralamaları
 - Seçilen bölgede fiyatı olmayan oyunlarda diğer bölgelerin fiyatları
+- Her oyunun paylaşılabilir adresi (ör. `/oyun/elden-ring`) ve "Linki kopyala" düğmesi
 - "Şu an ücretsiz" oyunlar, benzer oyun önerileri, güncel kurla yaklaşık fiyat karşılıkları
 - Son 3 ayın fiyat grafiği, 3 ayın ve tüm zamanların en düşük fiyatı
 - Arama, A–Z filtresi, sıralama (popüler, ucuzdan pahalıya, en yüksek indirim, en yeni…)
@@ -59,6 +60,7 @@ npm start         # http://localhost:3000
 | `npm run kurulum` | API anahtarlarını ve site ayarlarını girer / değiştirir |
 | `npm run kontrol` | Kaç oyunun fiyatı olduğunu, mağazaları ve gizlenen mağazaları gösterir |
 | `npm run sync` | Fiyatları elle bir kez günceller |
+| `npm test` | Otomatik testleri çalıştırır (güvenlik, fiyat bildirimleri, veri tabanı şeması) |
 
 ## Ayarlar (`.env`)
 
@@ -98,6 +100,8 @@ fiyatavi/
 │   ├── accountmail.js  E-posta doğrulama ve şifre sıfırlama mailleri
 │   ├── setup.js        Kurulum sihirbazı
 │   └── kontrol.js      Durum raporu
+├── test/               Otomatik testler (npm test)
+├── veritabani/         ER diyagramına uygun SQL şeması (fiyatavi.sql) ve şema görseli
 ├── games.json          Sitede her zaman bulunacak oyunlar
 └── .env.example        Örnek ayar dosyası
 ```
