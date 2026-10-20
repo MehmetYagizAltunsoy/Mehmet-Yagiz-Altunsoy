@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fiyatavı — oyun fiyat karşılaştırma</title>
-<meta name="description" content="PC oyunlarının fiyatlarını mağazalar arasında karşılaştır, en ucuzunu bul, fiyatı düşünce haber al.">
+<title>Fiyatavı — Türk oyuncular için oyun fiyat karşılaştırma</title>
+<meta name="description" content="Türk oyuncular için PC oyun fiyat karşılaştırma: Steam, Epic, GOG ve diğer mağazalardaki fiyatları TL olarak karşılaştır, en ucuzunu bul, fiyatı düşünce haber al.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3.5 16 12.6 5.2c.4-.5 1-.7 1.6-.7H26a2.5 2.5 0 0 1 2.5 2.5v18a2.5 2.5 0 0 1-2.5 2.5H14.2c-.6 0-1.2-.3-1.6-.7Z' fill='%23FFC93C'/%3E%3Ccircle cx='9.6' cy='16' r='1.7' fill='%231B1D36'/%3E%3Ccircle cx='20' cy='16' r='5.2' fill='none' stroke='%231B1D36' stroke-width='2.2'/%3E%3Cpath d='M20 7.6v3.6M20 20.8v3.6M11.6 16h3.6M24.8 16h3.1' stroke='%231B1D36' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,7 +79,7 @@ a{color:inherit}
 svg.i{width:20px;height:20px;flex:none}
 
 /* ---------- üst çubuk (sabit) ---------- */
-header.top{position:fixed;top:0;left:0;right:0;padding-top:env(safe-area-inset-top,0px);z-index:30;transition:box-shadow .35s;
+header.top{position:fixed;top:0;left:0;right:0;padding-top:env(safe-area-inset-top,0px);z-index:30;transition:box-shadow .35s,background .35s;
   background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px) saturate(1.2);border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;gap:16px;height:70px;transition:height .35s cubic-bezier(.2,.8,.2,1)}
 .bar .search,.bar .mark,.bar .logo,.bar .tagline,.bar .btn,.bar .icon{transition:all .35s cubic-bezier(.2,.8,.2,1)}
@@ -205,7 +205,7 @@ section{padding:22px 0}
 .slide .approx{color:#d6d6ec;font-size:14px}
 .frees{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:14px;overflow-x:auto;padding:4px 2px 12px}
 .free{display:grid;grid-template-columns:78px minmax(0,1fr);gap:12px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s,border-color .2s}
-.free:hover{transform:translateY(-2px);border-color:#57e3b0}
+.free:hover{transform:translateY(-2px);border-color:var(--coin-bg);box-shadow:0 0 0 1px var(--coin-bg)}
 .free .cov{height:104px;border-radius:8px;font-size:0;padding:0}
 .free h3{font:600 15.5px/1.2 var(--display);margin:0 0 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .freebadge{display:inline-flex;align-items:center;gap:6px;font:700 13px var(--display);color:#0b3b2e;background:#57e3b0;padding:3px 10px;border-radius:999px}
@@ -394,13 +394,35 @@ header.top.compact .userbtn{height:34px}
 .ptabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:16px 0 4px;overflow-x:auto}
 .ptabs button{border:0;background:none;padding:10px 14px;cursor:pointer;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;white-space:nowrap}
 .ptabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--coin-bg)}
-.avsearch{width:100%;height:42px;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:0 12px;margin:12px 0}
-.avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:10px;max-height:330px;overflow-y:auto;padding:4px}
-.avgrid button{position:relative;aspect-ratio:1;border-radius:50%;overflow:hidden;border:0;padding:0;cursor:pointer;background:var(--surface-2);box-shadow:0 0 0 2px transparent;transition:box-shadow .15s,transform .15s}
-.avgrid button:hover{transform:scale(1.06)}
-.avgrid button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--coin-bg)}
-.avgrid .cov{position:absolute;inset:0;border-radius:0;padding:0;font-size:0}
-.avgrid .tt{position:absolute;inset:auto 0 0 0;font-size:9.5px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:10px 4px 5px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.avpick{background:var(--surface-2);border:1px solid var(--line);border-radius:16px;padding:16px}@media (max-width:480px){.avpick{padding:12px}}
+.avnow{display:flex;align-items:center;gap:14px}
+.avnow .avatar{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--coin-bg)}
+.avnow .lbl{flex:1;min-width:0}
+.avnow b{display:block;font-size:15.5px}
+.avnow small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.avbar{display:flex;gap:10px;align-items:center;margin:16px 0 12px;flex-wrap:wrap}
+.avbar .seg{flex:none}
+.avsrch{position:relative;flex:1;min-width:180px}
+.avsrch svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
+.avsearch{width:100%;height:40px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:0 12px 0 36px}
+.avsearch:focus{outline:2px solid var(--coin-bg);outline-offset:1px;border-color:transparent}
+.avgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:14px 6px;max-height:320px;overflow-y:auto;padding:6px 4px 4px;overscroll-behavior:contain}
+.avgrid button{display:flex;flex-direction:column;align-items:center;gap:7px;border:0;background:none;padding:0;cursor:pointer;color:var(--text);min-width:0}
+.avgrid .ring{position:relative;width:68px;height:68px;border-radius:50%;overflow:hidden;background:var(--surface);box-shadow:0 0 0 2px var(--line);transition:box-shadow .15s,transform .15s}
+.avgrid .ring .cov{position:absolute;inset:0;border-radius:0;padding:0;font-size:0}
+.avgrid .ring img{object-position:50% 30%}
+.avgrid .ring.letter{display:grid;place-items:center;background:var(--coin-bg);color:var(--on-coin);font:700 28px var(--display)}
+.avgrid button:hover .ring{transform:translateY(-2px);box-shadow:0 0 0 2px var(--coin)}
+.avgrid button:focus-visible{outline:none}.avgrid button:focus-visible .ring{box-shadow:0 0 0 3px var(--coin)}
+.avgrid button[aria-pressed="true"] .ring{box-shadow:0 0 0 3px var(--coin-bg),0 0 0 6px color-mix(in srgb,var(--coin-bg) 30%,transparent)}
+.avgrid button[aria-pressed="true"]::after{content:"✓";position:absolute;margin:50px 0 0 50px;width:22px;height:22px;border-radius:50%;background:var(--coin-bg);color:var(--on-coin);font:700 12px/22px var(--body,inherit);text-align:center;box-shadow:0 0 0 2px var(--surface-2)}
+.avgrid button{position:relative}
+.avgrid .tt{font-size:11.5px;line-height:1.25;text-align:center;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;width:100%;word-break:break-word}
+.avgrid button[aria-pressed="true"] .tt{color:var(--text);font-weight:600}
+.avgrid .sk .ring{animation:avsk 1.2s ease-in-out infinite;box-shadow:none;background:var(--line)}
+.avgrid .sk .tt{height:10px;width:60%;border-radius:4px;background:var(--line)}
+@keyframes avsk{50%{opacity:.45}}
+.avgrid .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:26px 10px;font-size:14px}
 @media (max-width:720px){.userbtn .nm{display:none}.userbtn{padding:0 4px}.srow:has(.seg,.select,input[type=text]){flex-wrap:wrap}.srow .select{max-width:100%}}
 .row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:6px 0;flex-wrap:wrap}
 .row > span{font-size:15px}
@@ -507,6 +529,8 @@ body.cookie-on .totop{bottom:calc(var(--cb,110px) + 28px + env(safe-area-inset-b
 
 footer{padding:30px 0 40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:30px}
 footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:inherit;text-decoration:underline;text-underline-offset:2px}footer a:hover{color:var(--text)}
+footer .legalnote{flex-basis:100%;margin:6px 0 0;font-size:12px;line-height:1.5;opacity:.85;max-width:900px}
 
 @media (max-width:720px){.req{grid-template-columns:1fr}}
 @media (max-width:980px){
@@ -537,6 +561,44 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .backdrop .lane,.welcome .wall .lane{animation-duration:400s!important}
   *{scroll-behavior:auto!important}
 }
+/* ===== Görsel iyileştirmeler ===== */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* yatay listeler: kalın kaydırma çubuğu yerine kenar okları ve yumuşak kenar solması */
+.hs{position:relative}
+.hs>.frees,.hs>.cats,.hs>.simrow{scrollbar-width:none;scroll-behavior:smooth;overscroll-behavior-x:contain}
+.hs>.frees::-webkit-scrollbar,.hs>.cats::-webkit-scrollbar,.hs>.simrow::-webkit-scrollbar{display:none}
+.hs.l>*:first-child{-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px);mask-image:linear-gradient(90deg,transparent,#000 56px)}
+.hs.r>*:first-child{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 56px),transparent)}
+.hs.l.r>*:first-child{-webkit-mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent);mask-image:linear-gradient(90deg,transparent,#000 56px,#000 calc(100% - 56px),transparent)}
+.hs-btn{position:absolute;top:50%;z-index:2;width:42px;height:42px;margin-top:-26px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(8px);color:var(--text);display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s,background .2s}
+.hs-btn svg{width:18px;height:18px}
+.hs-btn.prev{left:-8px}.hs-btn.next{right:-8px}
+.hs-btn:hover{background:var(--coin-bg);color:var(--on-coin);border-color:var(--coin-bg);transform:scale(1.06)}
+.hs.cats-wrap .hs-btn{width:34px;height:34px;margin-top:-22px}
+@media (hover:hover) and (pointer:fine){.hs:hover.l .hs-btn.prev,.hs:hover.r .hs-btn.next,.hs:focus-within.l .hs-btn.prev,.hs:focus-within.r .hs-btn.next{opacity:1;pointer-events:auto}}
+/* indirim kademeleri: büyük indirim daha dikkat çekici */
+.tag .off.t1{background:color-mix(in srgb,var(--coin-bg) 22%,transparent);color:var(--text);transform:none;font-weight:600}
+.tag .off.t3{box-shadow:0 0 0 2px color-mix(in srgb,var(--coin-bg) 35%,transparent)}
+.tag .off.t4{background:linear-gradient(135deg,var(--coin-bg),var(--coin-bg2,var(--coin-bg)));box-shadow:0 0 14px color-mix(in srgb,var(--coin-bg) 55%,transparent);font-size:12.5px;padding:2px 8px}
+/* yüklenirken iskelet kartlar */
+.skel{pointer-events:none}
+.skel .cov,.skel i{display:block;background:linear-gradient(100deg,var(--surface-2) 30%,color-mix(in srgb,var(--surface-2) 55%,var(--line)) 50%,var(--surface-2) 70%);background-size:300% 100%;animation:shimmer 1.4s linear infinite;border-radius:6px}
+.skel .cov{border-radius:12px;box-shadow:none}
+.skel i{height:13px}
+@keyframes shimmer{from{background-position:100% 0}to{background-position:0 0}}
+/* kaydırınca beliren bölümler ve kartlar */
+.js-rv .rv{opacity:0;transform:translateY(22px)}
+.js-rv .rv.in{opacity:1;transform:none;transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
+@media (prefers-reduced-motion:reduce){.js-rv .rv{opacity:1;transform:none}.skel .cov,.skel i{animation:none}.hs>*{scroll-behavior:auto}}
+/* boş ekranlar */
+.nada{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:46px 16px;color:var(--muted)}
+.nada .ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--coin-bg) 16%,transparent);color:var(--coin-bg);margin-bottom:4px}
+.nada .ic svg{width:30px;height:30px}
+.nada b{color:var(--text);font:600 18px var(--display)}
+.nada p{margin:0;max-width:380px;font-size:14.5px;line-height:1.5}
+.nada .btn{margin-top:6px}
+/* üst menü: kaydırınca daha saydam, buzlu cam */
+header.top.compact{background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6)}
 </style>
 </head>
 <body>
@@ -607,7 +669,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   </section>
 </main>
 
-<footer><div class="wrap"><span data-i="footer"></span><span><span id="updated"></span> <button class="linkbtn" id="footHelp" data-i="help"></button> · <button class="linkbtn" id="footSettings" data-i="settings"></button> · <button class="linkbtn" data-legal="privacy" data-i="privacy"></button> · <button class="linkbtn" data-legal="kvkk" data-i="kvkk"></button> · <button class="linkbtn" data-legal="cookies" data-i="cookiesTitle"></button></span></div></footer>
+<footer><div class="wrap"><span data-ih="footer"></span><span><span id="updated"></span> <button class="linkbtn" id="footHelp" data-i="help"></button> · <button class="linkbtn" id="footSettings" data-i="settings"></button> · <button class="linkbtn" data-legal="privacy" data-i="privacy"></button> · <button class="linkbtn" data-legal="kvkk" data-i="kvkk"></button> · <button class="linkbtn" data-legal="cookies" data-i="cookiesTitle"></button></span><p class="legalnote" data-i="legalNote"></p></div></footer>
 
 <dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
 <dialog id="dlg2" class="wide"><div class="dlg" id="dlg2Body"></div></dialog>
@@ -634,10 +696,10 @@ const COUNTRIES = [
 const SORTS=["popular","bestsellers","favorites","rating","price_asc","price_desc","discount","az","newest"];
 
 const I18N={
- tr:{tagline:"PC oyun fiyatlarını mağazalar arasında karşılaştırır",
+ tr:{tagline:"Türk oyuncular için PC oyun fiyat karşılaştırma",
   wishlist:"İstek listesi",login:"Giriş yap",logout:"Çıkış yap",
   heroTitle:"Oyunu nereden en ucuza alırsın?",
-  heroSub:"Steam, Epic, GOG, Microsoft Store ve daha fazlasındaki fiyatları tek yerde karşılaştır. İstediğin oyunu takibe al, fiyatı düşünce haber verelim.",
+  heroSub:"Steam, Epic, GOG, Microsoft Store ve daha fazlasındaki fiyatları TL olarak tek yerde karşılaştır. İstediğin oyunu takibe al, fiyatı düşünce haber verelim.",
   statGames:"oyun",statShops:"mağaza",statRegions:"bölge",
   search:"Oyun ara…",all:"Tümü",dealsTitle:"Popüler oyunlarda indirim",dealsSub:"Son haftaların en çok bakılanları",
   countAll:"{n} oyun",countLetter:"{l} harfiyle başlayan {n} oyun",countQuery:"“{q}” için {n} oyun",countSub:"fiyatı olanlar",countSubAll:"fiyatı olmayanlar dahil",
@@ -645,7 +707,7 @@ const I18N={
   sort_popular:"En popüler",sort_price_asc:"Ucuzdan pahalıya",sort_price_desc:"Pahalıdan ucuza",sort_discount:"En yüksek indirim",sort_az:"A'dan Z'ye",sort_newest:"En yeni",
   sort_bestsellers:"Çok satanlar",sort_favorites:"En çok favorilenen",sort_rating:"En yüksek puan",
   onlyDeals:"Sadece indirimdekiler",allShops:"Tüm mağazalar",allCats:"Tümü",
-  profile:"Profil",pAvatar:"Profil resmi",pAvatarSub:"Sevdiğin bir oyunun kapağını profil resmi yap.",pAvatarSearch:"Oyun ara…",pAvatarNone:"Bu ada uyan kapak bulunamadı.",pAvatarSaved:"Profil resmin güncellendi.",pAvatarRemove:"Resmi kaldır",
+  profile:"Profil",pAvatar:"Profil resmi",pAvatarSub:"Sevdiğin bir oyunun kapağını profil resmi yap.",pAvatarSearch:"Oyun ara…",pAvatarNone:"Bu ada uyan kapak bulunamadı.",pAvatarSaved:"Profil resmin güncellendi.",pAvatarRemove:"Resmi kaldır",pAvatarNow:"Şu anki resmin",pAvatarLetter:"Baş harfin",pAvatarLetterSub:"Bir oyun seçilmedi, adının baş harfi kullanılıyor.",pAvatarPopular:"Popüler",pAvatarWish:"İstek listem",pAvatarWishEmpty:"İstek listende kapağı olan oyun yok. Popüler oyunlardan seçebilir ya da arayabilirsin.",
   pTabProfile:"Profil",pTabNotify:"Bildirimler",pTabSecurity:"Güvenlik",pTabAdmin:"Yönetim",
   sDigest:"Haftalık özet maili",sDigestSub:"Haftada bir, istek listendeki oyunların fiyatlarını tek mailde gönderir.",
   aUsers:"Kullanıcı",aUsersSub:"{v} doğrulanmış · son 7 günde {n} yeni",aWish:"İstek listesi kaydı",aWishSub:"{u} kullanıcı · {t} hedef fiyat",
@@ -689,7 +751,7 @@ const I18N={
   reqTitle:"Sistem gereksinimleri",reqMin:"En düşük",reqRec:"Önerilen",
   reqNone:"Bu oyun için Steam'de sistem gereksinimi bilgisi bulunamadı.",reqNoSteam:"Sistem gereksinimleri yalnızca Steam'de satılan oyunlar için gösterilebiliyor.",
   sController:"",
-  noResult:"Bu aramaya uyan oyun yok. Farklı bir ad dene ya da filtreleri kaldır.",
+  emptyTitle:"Oyun bulunamadı",emptyClear:"Filtreleri temizle",wishEmptyTitle:"İstek listen boş",wishBrowse:"Oyunlara göz at",prevItems:"Önceki",nextItems:"Sonraki",noResult:"Bu aramaya uyan oyun yok. Farklı bir ad dene ya da filtreleri kaldır.",
   searching:"Tüm mağazalarda aranıyor…",more:"Daha fazla göster",
   loading:"Fiyatlar yükleniyor…",loadErr:"Sunucuya ulaşılamadı. Sunucunun çalıştığından emin ol (npm start) ve sayfayı yenile.",
   syncing:"Fiyatlar ilk kez çekiliyor, bu bir iki dakika sürebilir. Sayfayı birazdan yenile.",
@@ -717,7 +779,7 @@ const I18N={
   removed:"{g} istek listenden çıkarıldı.",wishEmpty:"İstek listen boş. Bir oyunun sayfasından ekleyebilirsin.",
   wishLogin:"İstek listeni görmek için giriş yap.",mails:"Gönderilen bildirimler",
   updated:"Fiyatlar {t} güncellendi",otherCur:"Bu bölgedeki bazı mağazalar fiyatı {c} olarak listeliyor.",
-  footer:"Fiyat ve kapak verileri IsThereAnyDeal ve Steam üzerinden alınır. Oyun adları her dilde orijinal hâliyle gösterilir.",
+  footer:'Fiyat verileri <a href="https://isthereanydeal.com" target="_blank" rel="noopener">IsThereAnyDeal</a> API’si, kapak ve oyun bilgileri Steam üzerinden alınır. Oyun adları her dilde orijinal hâliyle gösterilir.',legalNote:"Mağaza adları ilgili şirketlerin markalarıdır. Fiyatavı; Valve, Steam, IsThereAnyDeal veya listelenen mağazalarla bağlantılı değildir ve onlar tarafından onaylanmamıştır. Fiyatlar bilgi amaçlıdır, olduğu gibi sunulur ve doğruluğu garanti edilmez; satın almadan önce mağazadaki fiyatı kontrol et.",
   themeToLight:"Açık moda geç",themeToDark:"Koyu moda geç",help:"Yardım",settings:"Ayarlar",
   /* karşılama */
   wTitle:"Tekrar hoş geldin",wLead:"Hesabına giriş yap, istek listen seni bekliyor.",wTitleUp:"Ücretsiz hesap aç",wLeadUp:"Bir dakikada üye ol, fiyatlar düşünce haber verelim.",
@@ -726,7 +788,7 @@ const I18N={
   wNoAcc:"Hesabın yok mu?",wHasAcc:"Zaten üye misin?",wGuest:"Üye olmadan devam et",or:"ya da",
   /* ayarlar */
   sAppearance:"Görünüm",sAccent:"Site rengi",sAccentSub:"Düğmeler, logo ve vurgu rengi.",acc_gold:"Altın",acc_mint:"Nane",acc_violet:"Lila",acc_coral:"Mercan",sTheme:"Tema",sBackdrop:"Ana sayfada soluk oyun kapaklı arka plan",themeSystem:"Sistem",themeLight:"Açık",themeDark:"Koyu",
-  sRegion:"Bölge ve dil",sCurrency:"Para birimi",sLang:"Dil",
+  sRegion:"Bölge ve dil",sCurrency:"Para birimi",sLang:"Dil",sLangRow:"Site dili",
   sList:"Oyun listesi",sDefaultSort:"Varsayılan sıralama",sShowAll:"Fiyatı olmayan oyunları da göster",
   sNotify:"Bildirimler",sDrops:"İstek listemdeki oyunların fiyatı düşünce mail at",sMinCut:"Sadece şu indirimden sonra",anyCut:"Her düşüşte",
   sAccount:"Hesap",sName:"Görünen ad",save:"Kaydet",saved:"Kaydedildi.",
@@ -740,13 +802,13 @@ const I18N={
    ["Satın alma bu sitede mi yapılıyor?","Hayır. “Mağazaya git” düğmesi seni mağazanın kendi sayfasına götürür; ödeme orada yapılır."],
    ["Fiyatlar ne sıklıkla güncelleniyor?","Popüler oyunlar ve istek listelerindeki oyunlar saatte bir, diğerleri günde bir güncellenir."],
    ["Neden bazı oyunların fiyatı yok?","Oyun seçtiğin bölgede satılmıyor olabilir, ücretsiz olabilir ya da fiyatı henüz çekilmemiş olabilir. Farklı bir para birimi seçerek diğer bölgelere bakabilirsin."],
-   ["İstek listesi nasıl çalışır?","Üye olup bir oyunu istek listene eklersen, fiyatı düştüğünde sana mail atarız. Bu mailleri Ayarlar'dan kapatabilir ya da sadece büyük indirimlerde gelmesini seçebilirsin."],
+   ["İstek listesi nasıl çalışır?","Üye olup bir oyunu istek listene eklersen, fiyatı düştüğünde sana mail atarız. Bu mailleri Profil → Bildirimler bölümünden kapatabilir ya da sadece büyük indirimlerde gelmesini seçebilirsin."],
    ["PlayStation, Xbox ve Nintendo fiyatları var mı?","Şimdilik PC mağazaları var. Konsol mağazaları üzerinde çalışıyoruz."]
   ]},
- en:{tagline:"Compares PC game prices across stores",
+ en:{tagline:"PC game price comparison for players in Turkey",
   wishlist:"Wishlist",login:"Sign in",logout:"Sign out",
   heroTitle:"Where is this game cheapest?",
-  heroSub:"Compare prices on Steam, Epic, GOG, Microsoft Store and more in one place. Track the games you want and we'll tell you when they drop.",
+  heroSub:"Made for players in Turkey: compare prices on Steam, Epic, GOG, Microsoft Store and more in Turkish lira, or switch to your own currency. Track the games you want and we'll tell you when they drop.",
   statGames:"games",statShops:"stores",statRegions:"regions",
   search:"Search games…",all:"All",dealsTitle:"Popular games on sale",dealsSub:"Most viewed in recent weeks",
   countAll:"{n} games",countLetter:"{n} games starting with {l}",countQuery:"{n} games for “{q}”",countSub:"with prices",countSubAll:"including unpriced",
@@ -754,7 +816,7 @@ const I18N={
   sort_popular:"Most popular",sort_price_asc:"Price: low to high",sort_price_desc:"Price: high to low",sort_discount:"Biggest discount",sort_az:"A to Z",sort_newest:"Newest",
   sort_bestsellers:"Best sellers",sort_favorites:"Most wishlisted",sort_rating:"Highest rated",
   onlyDeals:"On sale only",allShops:"All stores",allCats:"All",
-  profile:"Profile",pAvatar:"Profile picture",pAvatarSub:"Use the cover of a game you love as your picture.",pAvatarSearch:"Search games…",pAvatarNone:"No covers match this name.",pAvatarSaved:"Profile picture updated.",pAvatarRemove:"Remove picture",
+  profile:"Profile",pAvatar:"Profile picture",pAvatarSub:"Use the cover of a game you love as your picture.",pAvatarSearch:"Search games…",pAvatarNone:"No covers match this name.",pAvatarSaved:"Profile picture updated.",pAvatarRemove:"Remove picture",pAvatarNow:"Your current picture",pAvatarLetter:"Your initial",pAvatarLetterSub:"No game picked; your initial is used.",pAvatarPopular:"Popular",pAvatarWish:"My wishlist",pAvatarWishEmpty:"No games with covers in your wishlist. Pick from popular games or search.",
   pTabProfile:"Profile",pTabNotify:"Notifications",pTabSecurity:"Security",pTabAdmin:"Admin",
   sDigest:"Weekly digest email",sDigestSub:"Once a week, sends the prices of your wishlist games in one email.",
   aUsers:"Users",aUsersSub:"{v} verified · {n} new in 7 days",aWish:"Wishlist entries",aWishSub:"{u} users · {t} target prices",
@@ -798,7 +860,7 @@ const I18N={
   reqTitle:"System requirements",reqMin:"Minimum",reqRec:"Recommended",
   reqNone:"No system requirements were found on Steam for this game.",reqNoSteam:"System requirements are only available for games sold on Steam.",
   sController:"",
-  noResult:"No games match. Try another name or clear the filters.",
+  emptyTitle:"No games found",emptyClear:"Clear filters",wishEmptyTitle:"Your wishlist is empty",wishBrowse:"Browse games",prevItems:"Previous",nextItems:"Next",noResult:"No games match. Try another name or clear the filters.",
   searching:"Searching all stores…",more:"Show more",
   loading:"Loading prices…",loadErr:"Can't reach the server. Make sure it's running (npm start) and reload the page.",
   syncing:"Fetching prices for the first time, this can take a minute or two. Reload shortly.",
@@ -826,14 +888,14 @@ const I18N={
   removed:"{g} removed from your wishlist.",wishEmpty:"Your wishlist is empty. Add games from their page.",
   wishLogin:"Sign in to see your wishlist.",mails:"Sent notifications",
   updated:"Prices updated {t}",otherCur:"Some stores in this region list prices in {c}.",
-  footer:"Price and cover data come from IsThereAnyDeal and Steam. Game titles always appear in their original form.",
+  footer:'Price data comes from the <a href="https://isthereanydeal.com" target="_blank" rel="noopener">IsThereAnyDeal</a> API; covers and game info come from Steam. Game titles always appear in their original form.',legalNote:"Store names are trademarks of their respective owners. Fiyatavı is not affiliated with or endorsed by Valve, Steam, IsThereAnyDeal or the listed stores. Prices are for information only, provided as is and not guaranteed; check the price in the store before buying.",
   themeToLight:"Switch to light mode",themeToDark:"Switch to dark mode",help:"Help",settings:"Settings",
   wTitle:"Welcome back",wLead:"Sign in, your wishlist is waiting.",wTitleUp:"Create a free account",wLeadUp:"Sign up in a minute and we will tell you when prices drop.",
   wHi:"Welcome",wHead:"See where to buy a game <em>for the least</em> at a glance.",wSub:"Compare prices of {n} games across Steam, Epic, GOG and many more stores in 10 regions.",
   wF1:"Every store in one list",wF1s:"Lowest price and price history chart",wF2:"Wishlist",wF2s:"Save games you like and set a target price",wF3:"Deal alerts",wF3s:"We email you when the price drops",
   wNoAcc:"No account yet?",wHasAcc:"Already a member?",wGuest:"Continue without an account",or:"or",
   sAppearance:"Appearance",sAccent:"Site color",sAccentSub:"Buttons, logo and highlight color.",acc_gold:"Gold",acc_mint:"Mint",acc_violet:"Lilac",acc_coral:"Coral",sTheme:"Theme",sBackdrop:"Faded game cover background on the home page",themeSystem:"System",themeLight:"Light",themeDark:"Dark",
-  sRegion:"Region and language",sCurrency:"Currency",sLang:"Language",
+  sRegion:"Region and language",sCurrency:"Currency",sLang:"Language",sLangRow:"Site language",
   sList:"Game list",sDefaultSort:"Default sorting",sShowAll:"Show games without prices",
   sNotify:"Notifications",sDrops:"Email me when a wishlist game gets cheaper",sMinCut:"Only after a discount of",anyCut:"Any drop",
   sAccount:"Account",sName:"Display name",save:"Save",saved:"Saved.",
@@ -846,7 +908,7 @@ const I18N={
    ["Do I buy games here?","No. “Go to store” takes you to the store's own page; you pay there."],
    ["How often are prices updated?","Popular games and wishlisted games every hour, everything else once a day."],
    ["Why do some games have no price?","The game may not be sold in your region, may be free, or its price may not have been fetched yet. Pick another currency to check other regions."],
-   ["How does the wishlist work?","Sign up and add a game; we email you when its price drops. You can turn these emails off in Settings or only get them for big discounts."],
+   ["How does the wishlist work?","Sign up and add a game; we email you when its price drops. You can turn these emails off in Profile → Notifications or only get them for big discounts."],
    ["Are PlayStation, Xbox and Nintendo prices available?","For now it's PC stores. Console stores are in the works."]
   ]}
 };
@@ -862,14 +924,9 @@ async function api(path,opt={}){
   if(!r.ok)throw Object.assign(new Error(d.code||r.status),{code:d.code||"server"});
   return d;
 }
-function guessCurrency(){
-  const reg=(navigator.language||"").split("-")[1]||"";
-  const map={US:"USD",GB:"GBP",JP:"JPY",BR:"BRL",CA:"CAD",AU:"AUD",MX:"MXN",CH:"CHF",TR:"TRY",DE:"EUR",FR:"EUR",IT:"EUR",ES:"EUR",NL:"EUR"};
-  return map[reg]||"USD";
-}
 const state={
-  lang:store.get("g_lang",(navigator.language||"tr").startsWith("tr")?"tr":"en"),
-  cur:store.get("g_cur",guessCurrency()),
+  lang:store.get("g_lang","tr"),   // varsayılan Türkçe; İngilizce seçilebilir ve hatırlanır
+  cur:store.get("g_cur","TRY"),   // site Türk oyuncular için: herkes TL ile başlar, isteyen değiştirir
   theme:store.get("g_theme","system"),
   sort:store.get("g_sort","popular"),
   showAll:store.get("g_all",false),
@@ -931,8 +988,9 @@ function approx(p){
   const txt=new Intl.NumberFormat(loc(),{style:"currency",currency:state.cur,maximumFractionDigits:v>=100?0:2}).format(v);
   return `<span class="approx" title="${esc(t("approxTitle"))}">≈ ${txt}</span>`;
 }
+const offTier=c=>c>=75?"t4":c>=50?"t3":c>=25?"t2":"t1";
 function tag(p,withOld=true){
-  return `<span class="tag"><span class="now">${money(p.price,p.currency)}</span>${withOld&&p.cut?`<span class="was">${money(p.regular,p.currency)}</span>`:""}${p.cut?`<span class="off">-%${p.cut}</span>`:""}${approx(p)}</span>`;
+  return `<span class="tag"><span class="now">${money(p.price,p.currency)}</span>${withOld&&p.cut?`<span class="was">${money(p.regular,p.currency)}</span>`:""}${p.cut?`<span class="off ${offTier(p.cut)}">-%${p.cut}</span>`:""}${approx(p)}</span>`;
 }
 // bildirim: açık pencerelerin de üstünde görünsün diye "popover" katmanında gösterilir
 let tt,tt2;function toast(m){
@@ -1107,6 +1165,7 @@ async function logout(){
 function renderStatic(){
   document.documentElement.lang=state.lang;
   document.querySelectorAll("[data-i]").forEach(el=>el.textContent=t(el.dataset.i));
+  document.querySelectorAll("[data-ih]").forEach(el=>el.innerHTML=t(el.dataset.ih));   // sadece sitenin kendi sabit metinleri (bağlantı içerir)
   $("q").placeholder=t("search");
   $("helpBtn").title=t("help");$("helpBtn").setAttribute("aria-label",t("help"));
   $("settingsBtn").title=t("settings");$("settingsBtn").setAttribute("aria-label",t("settings"));
@@ -1225,7 +1284,9 @@ function renderCount(){
 function renderGrid(){
   if(state.status!=="ok"){
     $("count").textContent="";
-    $("grid").innerHTML=`<p class="state">${t({loading:"loading",error:"loadErr",syncing:"syncing"}[state.status])}</p>`;
+    $("grid").innerHTML=state.status==="loading"
+      ?Array.from({length:12},()=>`<div class="card skel" aria-hidden="true"><span class="cov"></span><i style="width:80%"></i><i style="width:55%"></i><i style="width:40%;height:20px"></i></div>`).join("")+`<span class="sr-only" role="status">${t("loading")}</span>`
+      :`<p class="state">${t({error:"loadErr",syncing:"syncing"}[state.status])}</p>`;
     $("moreWrap").hidden=true;
     return;
   }
@@ -1238,7 +1299,10 @@ function renderGrid(){
         :g.free?`<div class="from">${t("freeGame")}</div>`
         :g.other?`<div class="from">${t("noPrice")}</div><div class="elsewhere">${t("elsewhereCard",{c:esc(regionName(g.other.country)),p:`<b>${money(g.other.price,g.other.currency)}</b>`})}</div>`
         :`<div class="from">${t(g.pending?"pendingPrice":"noPrice")}</div>`}</button>`;
-  }).join(""):`<p class="empty">${t(state.searching?"searching":"noResult")}</p>`;
+  }).join(""):state.searching?`<p class="empty">${t("searching")}</p>`
+    :`<div class="nada">${ICON_SEARCH}<b>${t("emptyTitle")}</b><p>${t("noResult")}</p>${hasFilters()?`<button class="btn" id="clearFilters">${t("emptyClear")}</button>`:""}</div>`;
+  if($("clearFilters"))$("clearFilters").onclick=clearFilters;
+  revealCards();
   if(state.items.length&&state.searching)$("grid").insertAdjacentHTML("beforeend",`<p class="state" style="padding:8px 0">${t("searching")}</p>`);
   $("moreWrap").hidden=state.items.length>=state.total;
   $("moreBtn").disabled=state.loadingMore;
@@ -1686,7 +1750,7 @@ async function openWish(){
   await loadWish();
   const w=state.wish.map(id=>state.known[id]).filter(Boolean);
   let html=head+verifyNotice()+(w.length?w.map(g=>`<div class="wish-item">${cover(g)}<div><button class="t" data-g="${g.id}">${esc(g.title)}</button><div style="color:var(--muted);font-size:13px">${g.low?esc(g.low.shop):t(g.free?"freeGame":"noPrice")}</div></div>${g.low?tag(g.low):"<span></span>"}<button class="btn ghost rm" data-unwish="${g.id}">${t("remove")}</button></div>`).join("")
-    :`<p class="note">${t("wishEmpty")}</p>`);
+    :`<div class="nada">${ICON_HEART}<b>${t("wishEmptyTitle")}</b><p>${t("wishEmpty")}</p><button class="btn primary" data-close>${t("wishBrowse")}</button></div>`);
   let mails=[];try{mails=(await api("/api/notifications")).items}catch(e){}
   if(mails.length)html+=`<h3 style="font:600 17px var(--display);margin:22px 0 6px">${t("mails")} (${esc(state.user.email)})</h3>`+mails.map(m=>`<div class="mail">${esc(m.text)}<br><small>${fmtDate(m.sent_at.replace(" ","T")+"Z")}</small></div>`).join("");
   if(state.open!=="__wish"&&dlg.open)return;
@@ -1700,19 +1764,14 @@ const srow=(title,sub,ctrl,forId)=>`<div class="srow"><div class="lbl">${forId?`
 const sgroup=(title,rows)=>`<section class="sgroup"><h3>${title}</h3><div class="scard">${rows}</div></section>`;
 function openSettings(){
   state.open="__settings";
-  const u=state.user;
   $("dlgBody").innerHTML=`
    <div class="dlg-head"><h2>${t("settings")}</h2><button class="x" data-close aria-label="${t("close")}">✕</button></div>
-   <div class="scard" style="margin-top:12px">${u
-     ?`<button class="srow link" id="sToProfile"><span style="display:flex;align-items:center;gap:12px;min-width:0">${avatarHtml(u,40)}<span class="lbl"><b>${t("sAccountLink")}</b><small>${t("sAccountLinkSub")}</small></span></span></button>`
-     :srow(t("profile"),t("sLoginHint"),`<button class="btn primary" data-open-auth="">${t("login")}</button>`)}</div>
    ${sgroup(t("sAppearance"),
       srow(t("sAccent"),t("sAccentSub"),`<div class="swatches" role="group" aria-label="${t("sAccent")}">${Object.entries(ACCENTS).map(([k,c])=>`<button data-accent-set="${k}" aria-pressed="${state.accent===k}" title="${t("acc_"+k)}" aria-label="${t("acc_"+k)}" style="background:linear-gradient(135deg,${c[0]},${c[1]})"></button>`).join("")}</div>`)
      +srow(t("sBackdrop"),t("sBackdropSub"),sw("sBg",state.backdrop),"sBg")
      +srow(t("sAutoslide"),t("sAutoslideSub"),sw("sAuto",state.autoslide),"sAuto"))}
-   ${sgroup(t("sRegion"),
-      srow(t("sCurrency"),t("sCurrencySub"),`<select class="select" id="sCur">${COUNTRIES.map(c=>`<option value="${c[0]}" ${c[0]===state.cur?"selected":""}>${c[0]} · ${state.lang==="tr"?c[2]:c[3]}</option>`).join("")}</select>`,"sCur")
-     +srow(t("sLang"),"",`<div class="seg">${[["tr","Türkçe"],["en","English"]].map(([k,l])=>`<button data-lang-set="${k}" aria-pressed="${state.lang===k}">${l}</button>`).join("")}</div>`))}
+   ${sgroup(t("sLang"),
+      srow(t("sLangRow"),"",`<div class="seg">${[["tr","Türkçe"],["en","English"]].map(([k,l])=>`<button data-lang-set="${k}" aria-pressed="${state.lang===k}">${l}</button>`).join("")}</div>`))}
    ${sgroup(t("sList"),
       srow(t("sStore"),t("sStoreSub"),`<select class="select" id="sShop"><option value="">${t("allShops")}</option>${state.shops.map(x=>`<option ${x.name===state.shop?"selected":""}>${esc(x.name)}</option>`).join("")}</select>`,"sShop"))}
    ${sgroup(t("sAbout"),
@@ -1722,12 +1781,10 @@ function openSettings(){
   const body=$("dlgBody");
   body.querySelectorAll("[data-accent-set]").forEach(b=>b.onclick=()=>{setAccent(b.dataset.accentSet);openSettings()});
   body.querySelectorAll("[data-lang-set]").forEach(b=>b.onclick=()=>{setLang(b.dataset.langSet);openSettings()});
-  $("sCur").onchange=e=>setCurrency(e.target.value);
   $("sBg").onchange=e=>setBackdrop(e.target.checked);
   $("sAuto").onchange=e=>setAutoslide(e.target.checked);
   $("sShop").onchange=e=>setShop(e.target.value);
   $("sHelp").onclick=openHelp;
-  if($("sToProfile"))$("sToProfile").onclick=()=>openProfile();
   $("sReset").onclick=()=>{
     ["g_theme","g_accent","g_lang","g_cur","g_sort","g_shop","g_bg","g_autoslide"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
     toast(t("sResetDone"));setTimeout(()=>location.reload(),700);
@@ -1736,14 +1793,23 @@ function openSettings(){
 }
 
 /* ================= Profil ================= */
-let profileTab="profile",avatarQ="";
-async function loadAvatars(q){
-  let list=[];
-  try{list=(await api(`/api/avatars${q?"?q="+encodeURIComponent(q):""}`)).games}catch(e){}
+let profileTab="profile",avatarQ="",avatarSrc="popular",avReq=0;
+const avTile=(g,cur)=>`<button data-av="${esc(g.id)}" aria-pressed="${g.id===cur}" title="${esc(g.title)}"><span class="ring">${cover(g)}</span><span class="tt">${esc(g.title)}</span></button>`;
+async function loadAvatars(){
   const grid=$("avGrid");if(!grid)return;
-  const cur=state.user?.avatar?.id;
-  grid.innerHTML=list.length?list.map(g=>`<button data-av="${esc(g.id)}" aria-pressed="${g.id===cur}" title="${esc(g.title)}" aria-label="${esc(g.title)}">${cover(g)}<span class="tt">${esc(g.title)}</span></button>`).join("")
-    :`<p class="note">${t("pAvatarNone")}</p>`;
+  const my=++avReq;   // yavaş gelen eski cevap yenisinin üstüne yazmasın
+  grid.innerHTML=Array.from({length:12},()=>`<div class="sk" style="display:flex;flex-direction:column;align-items:center;gap:7px"><span class="ring"></span><span class="tt"></span></div>`).join("");
+  let list=[];
+  const qs=avatarQ?`?q=${encodeURIComponent(avatarQ)}`:avatarSrc==="wish"?"?src=wish":"";
+  try{list=(await api(`/api/avatars${qs}`)).games}catch(e){}
+  if(my!==avReq||!$("avGrid"))return;
+  const u=state.user,cur=u?.avatar?.id;
+  const letter=`<button data-av="" aria-pressed="${!cur}" title="${esc(t("pAvatarLetter"))}"><span class="ring letter">${esc((u?.name||"?").trim().charAt(0).toLocaleUpperCase(loc()))}</span><span class="tt">${t("pAvatarLetter")}</span></button>`;
+  const empty=`<p class="empty">${avatarQ?t("pAvatarNone"):avatarSrc==="wish"?t("pAvatarWishEmpty"):t("pAvatarNone")}</p>`;
+  grid.innerHTML=(avatarQ?"":letter)+(list.length?list.map(g=>avTile(g,cur)).join(""):empty);
+}
+function avatarNowHtml(u){
+  return `${avatarHtml(u,64)}<div class="lbl"><small>${t("pAvatarNow")}</small><b>${esc(u.avatar?.id?u.avatar.title||"":t("pAvatarLetter"))}</b>${u.avatar?.id?"":`<small>${t("pAvatarLetterSub")}</small>`}</div>`;
 }
 function openProfile(tab){
   const u=state.user;if(!u)return openAuth("in");
@@ -1753,10 +1819,16 @@ function openProfile(tab){
   if(profileTab==="admin"&&!u.isAdmin)profileTab="profile";
   let body="";
   if(profileTab==="profile"){
-    body=`<section class="sgroup"><h3>${t("pAvatar")}</h3><p class="note" style="margin:0 0 0 4px">${t("pAvatarSub")}</p>
-       <input class="avsearch" id="avQ" type="search" placeholder="${esc(t("pAvatarSearch"))}" value="${esc(avatarQ)}" autocomplete="off" aria-label="${esc(t("pAvatarSearch"))}">
-       <div class="avgrid" id="avGrid"><p class="note">${t("loading")}</p></div>
-       ${u.avatar?.id?`<p style="margin:10px 0 0 4px"><button class="linkbtn" id="avRemove">${t("pAvatarRemove")}</button></p>`:""}</section>
+    body=`<section class="sgroup"><h3>${t("pAvatar")}</h3>
+      <div class="avpick">
+       <div class="avnow" id="avNow">${avatarNowHtml(u)}</div>
+       <div class="avbar">
+         <div class="seg" role="group" aria-label="${esc(t("pAvatar"))}">${[["popular","pAvatarPopular"],["wish","pAvatarWish"]].map(([k,l])=>`<button data-avsrc="${k}" aria-pressed="${!avatarQ&&avatarSrc===k}">${t(l)}${k==="wish"&&state.wish.length?` <span class="note" style="margin:0">${state.wish.length}</span>`:""}</button>`).join("")}</div>
+         <label class="avsrch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+           <input class="avsearch" id="avQ" type="search" placeholder="${esc(t("pAvatarSearch"))}" value="${esc(avatarQ)}" autocomplete="off" aria-label="${esc(t("pAvatarSearch"))}"></label>
+       </div>
+       <div class="avgrid" id="avGrid" role="group" aria-label="${esc(t("pAvatar"))}"></div>
+      </div></section>
      ${sgroup(t("pTabProfile"),
         `<div class="srow form"><div class="lbl" style="flex:1"><label for="pName"><b>${t("pName")}</b></label><small>${t("pNameSub")}</small>
            <div style="display:flex;gap:8px;margin-top:8px"><input type="text" id="pName" value="${esc(u.name)}" maxlength="40"><button class="btn" id="pNameSave">${t("save")}</button></div></div></div>`
@@ -1792,10 +1864,20 @@ function openProfile(tab){
   const patch=async(b,msg)=>{try{state.user=(await api("/api/me",{method:"PATCH",body:b})).user;renderHeader();toast(msg||t("saved"));return true}catch(e){toast(t("errServer"));return false}};
   $("dlgBody").querySelectorAll("[data-ptab]").forEach(b=>b.onclick=()=>openProfile(b.dataset.ptab));
   if(profileTab==="profile"){
-    loadAvatars(avatarQ);
-    let tm;$("avQ").addEventListener("input",e=>{avatarQ=e.target.value.trim();clearTimeout(tm);tm=setTimeout(()=>loadAvatars(avatarQ),250)});
-    $("avGrid").addEventListener("click",async e=>{const b=e.target.closest("[data-av]");if(!b)return;if(await patch({avatar:b.dataset.av},t("pAvatarSaved")))openProfile()});
-    if($("avRemove"))$("avRemove").onclick=async()=>{if(await patch({avatar:null}))openProfile()};
+    loadAvatars();
+    const segBtns=$("dlgBody").querySelectorAll("[data-avsrc]");
+    const markSeg=()=>segBtns.forEach(b=>b.setAttribute("aria-pressed",String(!avatarQ&&b.dataset.avsrc===avatarSrc)));
+    segBtns.forEach(b=>b.onclick=()=>{avatarSrc=b.dataset.avsrc;avatarQ="";$("avQ").value="";markSeg();loadAvatars()});
+    let tm;$("avQ").addEventListener("input",e=>{avatarQ=e.target.value.trim();markSeg();clearTimeout(tm);tm=setTimeout(loadAvatars,250)});
+    // seçince pencere yeniden çizilmez: kaydırma yeri korunur, sadece önizleme ve işaret güncellenir
+    $("avGrid").addEventListener("click",async e=>{
+      const b=e.target.closest("[data-av]");if(!b||b.getAttribute("aria-pressed")==="true")return;
+      const id=b.dataset.av||null;
+      if(!await patch({avatar:id},t("pAvatarSaved")))return;
+      $("avGrid").querySelectorAll("[data-av]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+      $("avNow").innerHTML=avatarNowHtml(state.user);
+      const ph=$("dlgBody").querySelector(".phead .avatar");if(ph)ph.outerHTML=avatarHtml(state.user,84);
+    });
     $("pNameSave").onclick=async()=>{if(await patch({name:$("pName").value}))openProfile()};
     $("pWish").onclick=openWish;
   }else if(profileTab==="admin"){
@@ -1992,16 +2074,17 @@ function legalHtml(kind){
     <h3>4. Hukuki sebepler</h3><p>Kişisel verilerin, KVKK'nın 5. maddesinin 2. fıkrasındaki şu sebeplere dayanılarak işlenir: sözleşmenin kurulması ve ifası (c bendi), veri sorumlusunun hukuki yükümlülüğü (ç bendi) ve temel hak ve özgürlüklerine zarar vermemek kaydıyla veri sorumlusunun meşru menfaati (f bendi).</p>
     <h3>5. Toplama yöntemi</h3><p>Veriler, sitedeki kayıt, giriş ve ayar formları aracılığıyla ve site kullanıldıkça otomatik yollarla elektronik ortamda toplanır.</p>
     <h3>6. Aktarım</h3><p>Kişisel veriler satılmaz ve reklam amacıyla paylaşılmaz. Yalnızca hizmetin sunulması için gerekli olduğu ölçüde; e-postaların gönderilmesi için e-posta hizmet sağlayıcısına, sitenin barındırıldığı sunucu hizmet sağlayıcısına ve talep hâlinde yetkili kamu kurum ve kuruluşlarına aktarılabilir. Bu hizmet sağlayıcıların yurt dışında bulunması hâlinde aktarım, KVKK'nın 9. maddesindeki şartlara uygun olarak yapılır.</p>
-    <h3>7. Saklama süresi</h3><p>Veriler hesabın açık olduğu süre boyunca saklanır. Hesabını Ayarlar → Hesabı sil ile sildiğinde hesabına bağlı kişisel verilerin kalıcı olarak silinir. Tek kullanımlık bağlantılar ve oturumlar süreleri dolunca otomatik olarak silinir.</p>
+    <h3>7. Saklama süresi</h3><p>Veriler hesabın açık olduğu süre boyunca saklanır. Hesabını Profil → Güvenlik → Hesabı sil ile sildiğinde hesabına bağlı kişisel verilerin kalıcı olarak silinir. Tek kullanımlık bağlantılar ve oturumlar süreleri dolunca otomatik olarak silinir.</p>
     <h3>8. Hakların</h3><p>KVKK'nın 11. maddesi uyarınca; kişisel verilerinin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme, işlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenme, aktarıldığı üçüncü kişileri bilme, eksik veya yanlış işlenmişse düzeltilmesini, silinmesini veya yok edilmesini isteme, bu işlemlerin aktarılan üçüncü kişilere bildirilmesini isteme, münhasıran otomatik sistemlerle analiz edilmesi sonucu aleyhine bir sonuç çıkmasına itiraz etme ve kanuna aykırı işleme nedeniyle zarara uğraman hâlinde zararın giderilmesini talep etme haklarına sahipsin.</p>
     <p>Başvurularını ${mail} adresine iletebilirsin. Başvurun en geç 30 gün içinde ücretsiz olarak sonuçlandırılır.</p>`,
    privacy:`<h2>Gizlilik Politikası</h2>
     <p>${site}, PC oyunlarının mağazalardaki fiyatlarını karşılaştıran bir sitedir. Satış yapmaz; "Mağazaya git" bağlantıları seni ilgili mağazanın kendi sitesine götürür ve oradaki işlemler o mağazanın gizlilik politikasına tabidir.</p>
     <h3>Hangi bilgileri topluyoruz?</h3><p>Yalnızca üye olursan e-posta adresin, kullanıcı adın, şifrenin şifrelenmiş özeti, istek listen, hedef fiyatların ve tercihlerin saklanır. Ayrıntılar için Aydınlatma Metni'ne bak.</p>
     <h3>Nasıl kullanıyoruz?</h3><p>Bu bilgileri yalnızca hesabını yönetmek ve istediğin bildirimleri göndermek için kullanırız. Bilgilerini satmayız, reklam için kullanmayız ve ziyaretçi takibi yapan analiz ya da reklam araçları kullanmayız.</p>
+    <h3>Marka ve sorumluluk notu</h3><p>Mağaza adları ilgili şirketlerin markalarıdır. Fiyatavı; Valve, Steam, IsThereAnyDeal veya listelenen mağazalarla bağlantılı değildir. Fiyat verileri IsThereAnyDeal API’sinden olduğu gibi alınır; doğruluğu garanti edilmez.</p>
     <h3>Üçüncü taraf içerikler</h3><p>Sayfalarda gösterilen oyun kapakları, görseller ve fragmanlar Steam'in sunucularından, yazı tipleri Google Fonts'tan yüklenir. Bu içerikler yüklenirken tarayıcın, IP adresin gibi teknik bilgileri bu hizmet sağlayıcılarla paylaşır. Fiyat ve oyun bilgileri IsThereAnyDeal, Steam ve SteamSpy'dan alınır; bu hizmetlere senin kişisel bilgilerin gönderilmez.</p>
     <h3>Güvenlik</h3><p>Şifreler düz metin olarak saklanmaz. Oturumlar yalnızca sunucunun okuyabildiği güvenli bir çerezle tutulur ve art arda hatalı giriş denemeleri sınırlanır.</p>
-    <h3>Hesabını silme</h3><p>Ayarlar → Hesabı sil ile hesabını ve ona bağlı tüm bilgileri istediğin an kalıcı olarak silebilirsin.</p>
+    <h3>Hesabını silme</h3><p>Profil → Güvenlik → Hesabı sil ile hesabını ve ona bağlı tüm bilgileri istediğin an kalıcı olarak silebilirsin.</p>
     <h3>İletişim</h3><p>${who}, ${mail}</p>`,
    cookies:`<h2>Çerez Bilgilendirmesi</h2>
     <p>${site}, yalnızca sitenin çalışması için zorunlu olan çerezleri ve tarayıcı depolamasını kullanır. Reklam, analiz ya da takip çerezi kullanılmaz; bu yüzden ayrıca onay istenmez.</p>
@@ -2020,15 +2103,16 @@ function legalHtml(kind){
     <h3>4. Legal grounds</h3><p>KVKK Article 5(2): performance of a contract (c), legal obligation (ç) and legitimate interest (f).</p>
     <h3>5. Collection</h3><p>Electronically, through the site's forms and automatically as you use the site.</p>
     <h3>6. Transfers</h3><p>Your data is never sold or shared for advertising. It may be shared only as needed with the email service provider, the hosting provider and, on request, authorized public authorities. Transfers abroad follow Article 9 of KVKK.</p>
-    <h3>7. Retention</h3><p>For as long as your account exists. Deleting your account (Settings → Delete account) permanently erases the personal data linked to it.</p>
+    <h3>7. Retention</h3><p>For as long as your account exists. Deleting your account (Profile → Security → Delete account) permanently erases the personal data linked to it.</p>
     <h3>8. Your rights</h3><p>Under Article 11 of KVKK you may learn whether your data is processed, request information, learn the purpose and recipients, request correction or deletion, object to automated decisions and claim damages. Send requests to ${mail}; they are answered free of charge within 30 days.</p>`,
    privacy:`<h2>Privacy Policy</h2>
     <p>${site} compares PC game prices across stores. It doesn't sell anything; "Go to store" links take you to the store's own site, which has its own privacy policy.</p>
     <h3>What we collect</h3><p>Only if you sign up: your email, username, a hash of your password, your wishlist, target prices and preferences. See the Personal Data Notice for details.</p>
     <h3>How we use it</h3><p>Only to run your account and send the notifications you ask for. We don't sell your data, use it for ads, or use analytics or ad trackers.</p>
+    <h3>Trademarks and disclaimer</h3><p>Store names are trademarks of their respective owners. Fiyatavı is not affiliated with Valve, Steam, IsThereAnyDeal or the listed stores. Price data comes as is from the IsThereAnyDeal API and is not guaranteed.</p>
     <h3>Third-party content</h3><p>Cover art, images and trailers load from Steam's servers and fonts from Google Fonts; your browser shares technical data such as your IP address with them when loading. Price and game data come from IsThereAnyDeal, Steam and SteamSpy; your personal data is not sent to them.</p>
     <h3>Security</h3><p>Passwords are never stored in plain text, sessions use a secure server-only cookie and repeated failed logins are limited.</p>
-    <h3>Deleting your account</h3><p>Settings → Delete account permanently removes your account and all linked data.</p>
+    <h3>Deleting your account</h3><p>Profile → Security → Delete account permanently removes your account and all linked data.</p>
     <h3>Contact</h3><p>${who}, ${mail}</p>`,
    cookies:`<h2>Cookie Notice</h2>
     <p>${site} only uses cookies and browser storage that are strictly necessary for the site to work. There are no advertising, analytics or tracking cookies, so no separate consent is requested.</p>
@@ -2064,6 +2148,50 @@ setTimeout(renderBackdrop,400);
 setTimeout(renderCmpBar,800);
 // açık sayfada fiyatları 10 dk'da bir tazele (kullanıcı listede aşağı inmemişse)
 setInterval(()=>{if(state.status==="ok"&&!dlg.open&&state.page===0){state.details={};loadList(true);loadDeals()}},10*60_000);
+
+/* ================= Görsel yardımcılar ================= */
+const ICON_SEARCH=`<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8.5 11h5"/></svg></span>`;
+const ICON_HEART=`<span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span>`;
+const hasFilters=()=>!!(state.q.trim()||state.letter||state.cat||state.onlyDeals||state.shop);
+function clearFilters(){
+  state.q="";$("q").value="";$("qClear").hidden=true;state.letter=null;state.cat=null;state.onlyDeals=false;$("onlyDeals").checked=false;
+  if(state.shop){setShop("");return}
+  renderAZ();renderCats();loadList(true);
+}
+// Yatay listeler: kenar okları ve solma; sadece kaydırılacak içerik varsa görünür
+function enhanceScroller(el){
+  if(!el||el.parentElement?.classList.contains("hs"))return;
+  const wrap=document.createElement("div");wrap.className="hs"+(el.classList.contains("cats")?" cats-wrap":"");
+  el.parentNode.insertBefore(wrap,el);wrap.append(el);
+  const arrow=(dir)=>{const b=document.createElement("button");b.type="button";b.className="hs-btn "+dir;b.tabIndex=-1;
+    b.setAttribute("aria-label",t(dir==="prev"?"prevItems":"nextItems"));
+    b.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${dir==="prev"?"m15 5-7 7 7 7":"m9 5 7 7-7 7"}"/></svg>`;
+    b.onclick=()=>el.scrollBy({left:(dir==="prev"?-1:1)*el.clientWidth*.85});wrap.append(b)};
+  arrow("prev");arrow("next");
+  const upd=()=>{const max=el.scrollWidth-el.clientWidth-2;wrap.classList.toggle("l",el.scrollLeft>2);wrap.classList.toggle("r",el.scrollLeft<max)};
+  el.addEventListener("scroll",upd,{passive:true});new ResizeObserver(upd).observe(el);new MutationObserver(()=>requestAnimationFrame(upd)).observe(el,{childList:true});
+  // fare tekerleği dikey çevrilince listeyi yatay kaydır (Shift'e gerek kalmasın) — sadece kaydırılabiliyorsa
+  el.addEventListener("wheel",e=>{if(Math.abs(e.deltaY)<=Math.abs(e.deltaX))return;const max=el.scrollWidth-el.clientWidth;if(max<=0)return;
+    const next=el.scrollLeft+e.deltaY;if((e.deltaY<0&&el.scrollLeft<=0)||(e.deltaY>0&&el.scrollLeft>=max-1))return;e.preventDefault();el.scrollLeft=Math.max(0,Math.min(max,next))},{passive:false});
+  upd();
+}
+["endings","frees","cats"].forEach(id=>enhanceScroller($(id)));
+new MutationObserver(()=>document.querySelectorAll("#dlgBody .simrow").forEach(enhanceScroller)).observe($("dlgBody"),{childList:true,subtree:true});
+// Kaydırınca beliren bölümler ve kartlar (hareket azaltma tercihine saygı gösterir)
+const rvIO="IntersectionObserver" in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches
+  ?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");rvIO.unobserve(e.target)}}),{rootMargin:"0px 0px -6% 0px"}):null;
+if(rvIO){
+  document.documentElement.classList.add("js-rv");
+  document.querySelectorAll("main > section .sec-head, #results .toolbar").forEach(el=>{el.classList.add("rv");rvIO.observe(el)});
+}
+function revealCards(){
+  if(!rvIO)return;
+  let i=0;
+  document.querySelectorAll("#grid .card:not(.rv):not(.skel)").forEach(el=>{
+    const r=el.getBoundingClientRect();
+    if(r.top<innerHeight&&r.bottom>0)return;   // ekranda zaten görünenler bekletilmeden gösterilir
+    el.classList.add("rv");el.style.setProperty("--d",(i++%6)*55+"ms");rvIO.observe(el)});
+}
 </script>
 </body>
 </html>

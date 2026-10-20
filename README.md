@@ -1,6 +1,6 @@
 # Fiyatavı
 
-PC oyunlarının fiyatlarını Steam, Epic Games Store, GOG, Microsoft Store ve diğer yetkili mağazalar arasında karşılaştıran web sitesi. Bir oyunun nerede en ucuz olduğunu gösterir, istek listesindeki oyunların fiyatı düşünce kullanıcıya mail atar.
+Türk oyuncular için PC oyun fiyat karşılaştırma sitesi. Steam, Epic Games Store, GOG, Microsoft Store ve diğer yetkili mağazalardaki fiyatları TL olarak karşılaştırır; bir oyunun nerede en ucuz olduğunu gösterir, istek listesindeki oyunların fiyatı düşünce kullanıcıya mail atar. Arayüz Türkçe açılır; İngilizce ve başka para birimleri de seçilebilir.
 
 ## Özellikler
 

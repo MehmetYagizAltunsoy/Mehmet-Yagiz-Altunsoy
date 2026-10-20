@@ -43,7 +43,7 @@ const qLow = db.prepare("SELECT shop, price, regular, currency, cut, expiry, low
 const qMeta = db.prepare("SELECT value FROM meta WHERE key = 'last_sync'");
 const markViewed = db.prepare("UPDATE games SET viewed_at = datetime('now') WHERE id = ?");
 const validCountry = (req) => {
-  const c = String(req.query.country || "US").toUpperCase();
+  const c = String(req.query.country || "TR").toUpperCase();
   return COUNTRIES.includes(c) ? c : null;
 };
 
@@ -346,7 +346,7 @@ app.get("/api/search", async (req, res) => {
 
 /* ---------- Hesap ---------- */
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const cleanCountry = (c) => (COUNTRIES.includes(String(c).toUpperCase()) ? String(c).toUpperCase() : "US");
+const cleanCountry = (c) => (COUNTRIES.includes(String(c).toUpperCase()) ? String(c).toUpperCase() : "TR");   // site Türk oyuncular için: bilinmeyen bölge Türkiye sayılır
 const cleanLang = (l) => (l === "en" ? "en" : "tr");
 const qAvatar = db.prepare("SELECT id, title, boxart, appid FROM games WHERE id = ?");
 // Yönetici: .env'deki ADMIN_EMAILS (virgülle birden fazla), boşsa SUPPORT_EMAIL
@@ -452,14 +452,18 @@ app.post("/api/me/password", requireUser, async (req, res) => {
   res.json({ ok: true });
 });
 
-// Profil resmi seçmek için oyun kapakları (arama yapılabilir)
+// Profil resmi seçmek için oyun kapakları: popüler oyunlar, arama ya da (giriş yapmışsa) istek listesi
+const AV_COLS = "g.id, g.title, g.boxart, g.appid";
+const AV_HAS_IMG = "g.hidden = 0 AND (g.boxart IS NOT NULL OR g.appid IS NOT NULL)";
 app.get("/api/avatars", (req, res) => {
   const q = String(req.query.q || "").trim().slice(0, 60);
-  const rows = q
-    ? db.prepare(`SELECT id, title, boxart, appid FROM games WHERE hidden = 0 AND (boxart IS NOT NULL OR appid IS NOT NULL)
-        AND title LIKE ? ORDER BY popular_rank IS NULL, popular_rank, owners IS NULL, owners DESC LIMIT 30`).all(`%${q}%`)
-    : db.prepare(`SELECT id, title, boxart, appid FROM games WHERE hidden = 0 AND (boxart IS NOT NULL OR appid IS NOT NULL)
-        AND (popular_rank IS NOT NULL OR collected_rank IS NOT NULL) ORDER BY COALESCE(popular_rank, collected_rank + 1000) LIMIT 30`).all();
+  let rows;
+  if (q) rows = db.prepare(`SELECT ${AV_COLS} FROM games g WHERE ${AV_HAS_IMG} AND g.title LIKE ?
+      ORDER BY g.popular_rank IS NULL, g.popular_rank, g.owners IS NULL, g.owners DESC LIMIT 36`).all(`%${q}%`);
+  else if (req.query.src === "wish" && req.user) rows = db.prepare(`SELECT ${AV_COLS} FROM wishlist w JOIN games g ON g.id = w.game_id
+      WHERE w.user_id = ? AND ${AV_HAS_IMG} ORDER BY w.added_at DESC LIMIT 60`).all(req.user.id);
+  else rows = db.prepare(`SELECT ${AV_COLS} FROM games g WHERE ${AV_HAS_IMG}
+      AND (g.popular_rank IS NOT NULL OR g.collected_rank IS NOT NULL) ORDER BY COALESCE(g.popular_rank, g.collected_rank + 1000) LIMIT 36`).all();
   res.json({ games: rows.map((r) => ({ ...r })) });
 });
 
