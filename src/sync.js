@@ -10,7 +10,7 @@ import { checkPriceDrops } from "./notify.js";
 import { blockedShops, isBlocked, rememberSamples } from "./shops.js";
 
 // Site para birimi → IsThereAnyDeal ülkesi (EUR için Almanya fiyatları)
-export const COUNTRIES = ["US", "DE", "GB", "JP", "BR", "CA", "AU", "MX", "CH", "TR"];
+export const COUNTRIES = ["TR"];   // site Türk oyuncular için: sadece Türkiye fiyatları çekilir (API sınırının tamamı Türkiye'ye gider)
 export const HISTORY_MONTHS = 36;   // oyun sayfasındaki grafik için en fazla 3 yıllık fiyat geçmişi
 const CATALOG_SIZE = Math.min(Math.max(Number(process.env.CATALOG_SIZE || 1000), 0), 1000);
 const TAIL_HOURS = Number(process.env.TAIL_REFRESH_HOURS || 24);   // az bakılan oyunlar kaç saatte bir

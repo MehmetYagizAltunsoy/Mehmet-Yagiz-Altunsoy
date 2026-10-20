@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS users (
   email      TEXT UNIQUE NOT NULL,
   name       TEXT NOT NULL,
   pass_hash  TEXT NOT NULL,             -- scrypt + tuz, düz şifre asla saklanmaz
-  country    TEXT DEFAULT 'US',         -- fiyat bildirimleri bu bölgeye göre
+  country    TEXT DEFAULT 'TR',         -- fiyat bildirimleri bu bölgeye göre
   lang       TEXT DEFAULT 'tr',         -- mailler bu dilde
   created_at TEXT DEFAULT (datetime('now'))
 );
@@ -172,6 +172,18 @@ if (!db.prepare("SELECT 1 FROM game_tags LIMIT 1").get()) {
     try { for (const t of JSON.parse(g.tags)) ins.run(g.id, t); } catch {}
   }
   db.exec("COMMIT");
+}
+
+// Site artık sadece Türkiye fiyatlarını gösteriyor: diğer bölgelerden kalan eski kayıtları bir kez temizle
+if (!db.prepare("SELECT 1 FROM meta WHERE key = 'only_tr'").get()) {
+  db.exec(`BEGIN;
+    DELETE FROM prices WHERE country <> 'TR';
+    DELETE FROM lows WHERE country <> 'TR';
+    DELETE FROM price_history WHERE country <> 'TR';
+    DELETE FROM history_fetched WHERE country <> 'TR';
+    UPDATE users SET country = 'TR' WHERE country IS NULL OR country <> 'TR';
+    INSERT OR REPLACE INTO meta (key, value) VALUES ('only_tr', '1');
+    COMMIT;`);
 }
 
 export function tx(fn) {

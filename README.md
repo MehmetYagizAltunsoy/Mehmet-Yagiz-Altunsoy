@@ -1,15 +1,14 @@
 # Fiyatavı
 
-Türk oyuncular için PC oyun fiyat karşılaştırma sitesi. Steam, Epic Games Store, GOG, Microsoft Store ve diğer yetkili mağazalardaki fiyatları TL olarak karşılaştırır; bir oyunun nerede en ucuz olduğunu gösterir, istek listesindeki oyunların fiyatı düşünce kullanıcıya mail atar. Arayüz Türkçe açılır; İngilizce ve başka para birimleri de seçilebilir.
+Türk oyuncular için PC oyun fiyat karşılaştırma sitesi. Steam, Epic Games Store, GOG, Microsoft Store ve diğer yetkili mağazalardaki fiyatları TL olarak karşılaştırır; bir oyunun nerede en ucuz olduğunu gösterir, istek listesindeki oyunların fiyatı düşünce kullanıcıya mail atar. Fiyatlar Türkiye mağazalarından TL olarak gösterilir; arayüz Türkçe açılır, İngilizce de seçilebilir.
 
 ## Özellikler
 
-- 10 bölgenin gerçek mağaza fiyatları (USD, EUR, GBP, JPY, BRL, CAD, AUD, MXN, CHF, TRY)
+- Türkiye mağazalarının gerçek fiyatları (TL)
 - Steam'deki neredeyse tüm oyunlar + en popüler 1000 oyun; listede olmayan oyunlar aramayla eklenir
 - Popüler oyunlarda indirimler ve indirimin bitiş tarihi, "Çok satanlar" vitrini ve fragmanlı "Günün oyunu" bandı
 - Kategoriler (aksiyon, macera, bulmaca…), mağaza filtresi, sadece indirimdekiler
 - Steam oyuncu puanları; çok satan, en çok favorilenen ve en yüksek puanlı sıralamaları
-- Seçilen bölgede fiyatı olmayan oyunlarda diğer bölgelerin fiyatları
 - Her oyunun paylaşılabilir adresi (ör. `/oyun/elden-ring`) ve "Linki kopyala" düğmesi
 - "Şu an ücretsiz" oyunlar, benzer oyun önerileri, güncel kurla yaklaşık fiyat karşılıkları
 - Fiyat geçmişi grafiği (3 ay / 6 ay / 1 yıl / tümü), dönemin ve tüm zamanların en düşük fiyatı

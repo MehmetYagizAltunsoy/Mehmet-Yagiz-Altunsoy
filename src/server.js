@@ -56,8 +56,7 @@ const SHOP_COLS = `l.shop_name AS l_shop, l.price AS l_price, l.regular AS l_reg
   l.cut AS l_cut, l.expiry AS l_expiry, NULL AS l_m3, NULL AS l_all`;
 const LIST_COLS = `${GAME_COLS}, ${LOW_COLS}`;
 // Seçilen bölgede fiyat yoksa: başka bölgedeki en ucuz fiyat (kart ve oyun sayfasında gösterilir)
-const OTHER_COL = `(SELECT o.country || '|' || o.shop || '|' || o.price || '|' || o.currency FROM lows o
-  WHERE o.game_id = g.id AND o.country <> ? ORDER BY o.usd LIMIT 1) AS other`;
+const OTHER_COL = "NULL AS other";   // eskiden başka bölgedeki en ucuz fiyat; artık sadece Türkiye var
 function listItem(r) {
   const [oc, os, op, ocur] = String(r.other ?? "").split("|");
   return {
@@ -129,7 +128,7 @@ app.get("/api/games", (req, res) => {
   const order = "ORDER BY " + (ORDERS[String(req.query.sort)] || ORDERS.popular);
   const total = db.prepare(`SELECT COUNT(*) AS n ${from}`).get(...args).n;
   const rows = db.prepare(`SELECT ${GAME_COLS}, ${cols}, ${OTHER_COL} ${from} ${order} LIMIT ${size} OFFSET ${page * size}`)
-    .all(country, ...args);
+    .all(...args);
   const games = rows.map(listItem);
   // fiyatı hiç çekilmemiş oyunlar ekranda göründüyse sıranın başına al
   const pend = games.filter((g) => g.pending).map((g) => g.id);
@@ -293,8 +292,7 @@ app.get("/api/games/:id", async (req, res) => {
   res.json({ game: {
     ...listItem({ ...g, l_shop: low?.shop, l_price: low?.price, l_regular: low?.regular, l_currency: low?.currency, l_cut: low?.cut, l_expiry: low?.expiry,
       l_m3: low?.low_m3, l_all: low?.low_all }),
-    elsewhere: low ? [] : db.prepare(`SELECT country, shop, price, currency, cut FROM lows WHERE game_id = ? AND country <> ?
-      ORDER BY usd LIMIT 6`).all(id, country).map((r) => ({ ...r })),
+    elsewhere: [],
     developers: JSON.parse(g.developers || "[]"),
     tags: JSON.parse(g.tags || "[]"),
     prices: qPrices.all(id, country),
@@ -315,6 +313,7 @@ app.get("/api/config", (_req, res) => {
       games: db.prepare("SELECT COUNT(*) AS n FROM games WHERE hidden = 0").get().n,
       priced: db.prepare("SELECT COUNT(DISTINCT game_id) AS n FROM lows").get().n,
       shops: db.prepare("SELECT COUNT(DISTINCT shop_name) AS n FROM prices").get().n,
+      deals: db.prepare("SELECT COUNT(*) AS n FROM lows l JOIN games g ON g.id = l.game_id WHERE g.hidden = 0 AND l.cut > 0").get().n,
     } };
   }
   res.json({

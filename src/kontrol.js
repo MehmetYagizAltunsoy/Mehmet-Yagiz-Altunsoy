@@ -2,7 +2,7 @@
 import "dotenv/config";
 import { db } from "./db.js";
 
-const COUNTRIES = ["US", "DE", "GB", "JP", "BR", "CA", "AU", "MX", "CH", "TR"];
+const COUNTRIES = ["TR"];
 const total = db.prepare("SELECT COUNT(*) AS n FROM games WHERE hidden = 0").get().n;
 const priced = db.prepare(`SELECT COUNT(DISTINCT p.game_id) AS n FROM prices p
   JOIN games g ON g.id = p.game_id WHERE g.hidden = 0 AND p.country = ?`);

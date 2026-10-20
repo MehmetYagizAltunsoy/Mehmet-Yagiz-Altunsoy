@@ -257,8 +257,6 @@ table.cmp thead th{vertical-align:bottom}
 .rate{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;flex:none;font-size:12px;font-weight:600;padding:1px 7px;border-radius:6px;background:var(--surface-2)}
 .rate.good{color:var(--down)} .rate.mid{color:var(--coin)} .rate.bad{color:var(--up)}
 .card .row1{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
-.card .elsewhere{font-size:12px;color:var(--muted)}
-.card .elsewhere b{color:var(--text);font-family:var(--display)}
 
 .spin{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;vertical-align:-3px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -659,7 +657,6 @@ header.top.compact{background:color-mix(in srgb,var(--bg) 78%,transparent);backd
         <label class="check"><input type="checkbox" id="onlyDeals"><span data-i="onlyDeals"></span></label>
         <select class="select" id="shop" aria-label="Mağaza"></select>
         <select class="select" id="sort" aria-label="Sıralama"></select>
-        <select class="select" id="cur" aria-label="Para birimi"></select>
       </div>
     </div>
     <div class="cats" id="cats"></div>
@@ -686,13 +683,7 @@ header.top.compact{background:color-mix(in srgb,var(--bg) 78%,transparent);backd
 <div class="toast" id="toast" role="status" aria-live="polite" popover="manual"></div>
 <script>
 /* ================= Ayarlar ve metinler ================= */
-const COUNTRIES = [
-  ["USD","US","ABD","United States"],["EUR","DE","Avrupa Birliği","European Union"],
-  ["GBP","GB","Birleşik Krallık","United Kingdom"],["JPY","JP","Japonya","Japan"],
-  ["BRL","BR","Brezilya","Brazil"],["CAD","CA","Kanada","Canada"],
-  ["AUD","AU","Avustralya","Australia"],["MXN","MX","Meksika","Mexico"],
-  ["CHF","CH","İsviçre","Switzerland"],["TRY","TR","Türkiye","Türkiye"]
-];
+const COUNTRIES = [["TRY","TR","Türkiye","Türkiye"]];   // site Türk oyuncular için: sadece Türkiye fiyatları ve TL
 const SORTS=["popular","bestsellers","favorites","rating","price_asc","price_desc","discount","az","newest"];
 
 const I18N={
@@ -700,7 +691,7 @@ const I18N={
   wishlist:"İstek listesi",login:"Giriş yap",logout:"Çıkış yap",
   heroTitle:"Oyunu nereden en ucuza alırsın?",
   heroSub:"Steam, Epic, GOG, Microsoft Store ve daha fazlasındaki fiyatları TL olarak tek yerde karşılaştır. İstediğin oyunu takibe al, fiyatı düşünce haber verelim.",
-  statGames:"oyun",statShops:"mağaza",statRegions:"bölge",
+  statGames:"oyun",statShops:"mağaza",statDeals:"indirimde",
   search:"Oyun ara…",all:"Tümü",dealsTitle:"Popüler oyunlarda indirim",dealsSub:"Son haftaların en çok bakılanları",
   countAll:"{n} oyun",countLetter:"{l} harfiyle başlayan {n} oyun",countQuery:"“{q}” için {n} oyun",countSub:"fiyatı olanlar",countSubAll:"fiyatı olmayanlar dahil",
   showAll:"Fiyatı olmayanları da göster",
@@ -723,13 +714,13 @@ const I18N={
   pPassTitle:"Şifre değiştir",pPassCur:"Mevcut şifre",pPassNew:"Yeni şifre",pPassSave:"Şifreyi değiştir",pPassDone:"Şifren değişti. Diğer cihazlardaki oturumların kapatıldı.",
   sDropsSub:"Hedef fiyat koyduğun oyunlarda sadece hedefe inince mail atılır.",sMinCutSub:"Küçük düşüşler için mail almak istemiyorsan eşik koy.",
   sThemeSub:"Sistem seçilirse bilgisayarının ayarı izlenir.",sBackdropSub:"Ana sayfanın üstünde, çok soluk kayan kapaklar.",sAutoslideSub:"Kapalıysa vitrin sadece oklarla değişir.",
-  sCurrencySub:"Fiyatlar bu bölgenin mağazalarından gösterilir.",sStoreSub:"Liste ve vitrin sadece bu mağazayı gösterir.",sDefaultSortSub:"Site açıldığında listenin sıralaması.",
-  sAbout:"Yardım ve hakkında",sLegal:"Gizlilik ve KVKK",sResetPrefs:"Site tercihlerini sıfırla",sResetSub:"Tema, dil, para birimi ve liste tercihleri varsayılana döner.",sResetBtn:"Sıfırla",sResetDone:"Tercihler sıfırlandı.",
+  sStoreSub:"Liste ve vitrin sadece bu mağazayı gösterir.",sDefaultSortSub:"Site açıldığında listenin sıralaması.",
+  sAbout:"Yardım ve hakkında",sLegal:"Gizlilik ve KVKK",sResetPrefs:"Site tercihlerini sıfırla",sResetSub:"Tema, dil ve liste tercihleri varsayılana döner.",sResetBtn:"Sıfırla",sResetDone:"Tercihler sıfırlandı.",
   sAccountLink:"Profil ve hesap",sAccountLinkSub:"Profil resmi, bildirimler, şifre ve hesap silme",
   vitrinTitle:"Çok satanlar",vitrinSub:"durdurmak için üzerine gel",
   spotEyebrow:"Günün oyunu",spotCta:"Fiyatları gör",soundOn:"Sesi aç",soundOff:"Sesi kapat",
-  elsewhereCard:"{c}: {p}",pendingPrice:"Fiyat getiriliyor…",
-  elsewhereTitle:"Başka bölgelerdeki fiyatlar",elsewhereNote:"Bu oyunun seçtiğin bölgede fiyatı yok. Diğer bölgelerdeki en ucuz fiyatlar:",region:"Bölge",
+  pendingPrice:"Fiyat getiriliyor…",
+  region:"Bölge",
   ratingLabel:"Steam puanı",reviews:"{n} değerlendirme",
   r1:"Olağanüstü olumlu",r2:"Çok olumlu",r3:"Çoğunlukla olumlu",r4:"Karışık",r5:"Çoğunlukla olumsuz",r6:"Olumsuz",
   sStore:"Tercih ettiğim mağaza",sAutoslide:"İndirim vitrini kendiliğinden kaysın",toTop:"Başa dön",approxTitle:"Güncel kurla yaklaşık karşılık; mağazanın kendi kuru farklı olabilir",cmpAdd:"Karşılaştır",cmpRemove:"Karşılaştırmadan çıkar",cmpBar:"Karşılaştır",cmpTitle:"Oyun karşılaştırma",cmpFull:"En fazla 3 oyun karşılaştırabilirsin.",cmpClear:"Karşılaştırmayı temizle",cmpNeed:"Karşılaştırmak için en az 2 oyun seç.",cmpPrice:"En ucuz fiyat",cmpShop:"Mağaza",cmpRegular:"Normal fiyat",cmpAtl:"Tüm zamanların en düşüğü",cmpRating:"Steam puanı",cmpRelease:"Çıkış tarihi",cmpTags:"Kategoriler",cmpAdvice:"Öneri",cmpCheapest:"En ucuzu",endTitle:"Bu hafta biten indirimler",endSub:"Süresi dolmadan yakala",endDH:"{d} gün {h} sa kaldı",endHM:"{h} sa {m} dk kaldı",endM:"{m} dk kaldı",endDone:"İndirim bitti",freeTitle:"Şu an ücretsiz",freeSub:"Kısa süreliğine bedava; kaçırma",freeNow:"Ücretsiz",freeUntil:"{d} tarihine kadar",freeNoEnd:"Bitiş tarihi belirtilmemiş",simTitle:"Benzer oyunlar",slideOff:"-%{p} indirim",prevSlide:"Önceki oyun",nextSlide:"Sonraki oyun",
@@ -755,7 +746,7 @@ const I18N={
   searching:"Tüm mağazalarda aranıyor…",more:"Daha fazla göster",
   loading:"Fiyatlar yükleniyor…",loadErr:"Sunucuya ulaşılamadı. Sunucunun çalıştığından emin ol (npm start) ve sayfayı yenile.",
   syncing:"Fiyatlar ilk kez çekiliyor, bu bir iki dakika sürebilir. Sayfayı birazdan yenile.",
-  noPrice:"Bu bölgede fiyat bulunamadı",freeGame:"Ücretsiz oynanabilir",usRef:"ABD fiyatı: {p}",
+  noPrice:"Türkiye mağazalarında fiyat yok",freeGame:"Ücretsiz oynanabilir",
   detailLoading:"Mağaza fiyatları yükleniyor…",detailErr:"Ayrıntılar yüklenemedi. Oyunu kapatıp tekrar aç.",
   from:"En düşük",bestNow:"Şu an en ucuz",endsOn:"İndirim bitişi",noEnd:"Belirtilmemiş",release:"Çıkış tarihi",developer:"Geliştirici",
   store:"Mağaza",price:"Fiyat",normal:"Normal",cheapest:"En ucuz",goStore:"Mağazaya git",pricesTitle:"Mağaza fiyatları",
@@ -788,7 +779,7 @@ const I18N={
   wNoAcc:"Hesabın yok mu?",wHasAcc:"Zaten üye misin?",wGuest:"Üye olmadan devam et",or:"ya da",
   /* ayarlar */
   sAppearance:"Görünüm",sAccent:"Site rengi",sAccentSub:"Düğmeler, logo ve vurgu rengi.",acc_gold:"Altın",acc_mint:"Nane",acc_violet:"Lila",acc_coral:"Mercan",sTheme:"Tema",sBackdrop:"Ana sayfada soluk oyun kapaklı arka plan",themeSystem:"Sistem",themeLight:"Açık",themeDark:"Koyu",
-  sRegion:"Bölge ve dil",sCurrency:"Para birimi",sLang:"Dil",sLangRow:"Site dili",
+  sLang:"Dil",sLangRow:"Site dili",
   sList:"Oyun listesi",sDefaultSort:"Varsayılan sıralama",sShowAll:"Fiyatı olmayan oyunları da göster",
   sNotify:"Bildirimler",sDrops:"İstek listemdeki oyunların fiyatı düşünce mail at",sMinCut:"Sadece şu indirimden sonra",anyCut:"Her düşüşte",
   sAccount:"Hesap",sName:"Görünen ad",save:"Kaydet",saved:"Kaydedildi.",
@@ -801,15 +792,15 @@ const I18N={
    ["Bu site ne işe yarar?","PC oyunlarının Steam, Epic Games Store, GOG, Microsoft Store ve diğer yetkili mağazalardaki fiyatlarını tek yerde gösterir. Bir oyunun nerede en ucuz olduğunu görür, doğrudan o mağazaya gidersin."],
    ["Satın alma bu sitede mi yapılıyor?","Hayır. “Mağazaya git” düğmesi seni mağazanın kendi sayfasına götürür; ödeme orada yapılır."],
    ["Fiyatlar ne sıklıkla güncelleniyor?","Popüler oyunlar ve istek listelerindeki oyunlar saatte bir, diğerleri günde bir güncellenir."],
-   ["Neden bazı oyunların fiyatı yok?","Oyun seçtiğin bölgede satılmıyor olabilir, ücretsiz olabilir ya da fiyatı henüz çekilmemiş olabilir. Farklı bir para birimi seçerek diğer bölgelere bakabilirsin."],
+   ["Neden bazı oyunların fiyatı yok?","Oyun Türkiye mağazalarında satılmıyor olabilir, ücretsiz olabilir ya da fiyatı henüz çekilmemiş olabilir."],
    ["İstek listesi nasıl çalışır?","Üye olup bir oyunu istek listene eklersen, fiyatı düştüğünde sana mail atarız. Bu mailleri Profil → Bildirimler bölümünden kapatabilir ya da sadece büyük indirimlerde gelmesini seçebilirsin."],
    ["PlayStation, Xbox ve Nintendo fiyatları var mı?","Şimdilik PC mağazaları var. Konsol mağazaları üzerinde çalışıyoruz."]
   ]},
  en:{tagline:"PC game price comparison for players in Turkey",
   wishlist:"Wishlist",login:"Sign in",logout:"Sign out",
   heroTitle:"Where is this game cheapest?",
-  heroSub:"Made for players in Turkey: compare prices on Steam, Epic, GOG, Microsoft Store and more in Turkish lira, or switch to your own currency. Track the games you want and we'll tell you when they drop.",
-  statGames:"games",statShops:"stores",statRegions:"regions",
+  heroSub:"Made for players in Turkey: compare prices on Steam, Epic, GOG, Microsoft Store and more in Turkish lira. Track the games you want and we'll tell you when they drop.",
+  statGames:"games",statShops:"stores",statDeals:"on sale",
   search:"Search games…",all:"All",dealsTitle:"Popular games on sale",dealsSub:"Most viewed in recent weeks",
   countAll:"{n} games",countLetter:"{n} games starting with {l}",countQuery:"{n} games for “{q}”",countSub:"with prices",countSubAll:"including unpriced",
   showAll:"Show games without prices",
@@ -832,13 +823,13 @@ const I18N={
   pPassTitle:"Change password",pPassCur:"Current password",pPassNew:"New password",pPassSave:"Change password",pPassDone:"Password changed. You were signed out on other devices.",
   sDropsSub:"For games with a target price, we only email when the target is reached.",sMinCutSub:"Set a threshold if you don't want emails for small drops.",
   sThemeSub:"System follows your computer's setting.",sBackdropSub:"Very faint scrolling covers at the top of the home page.",sAutoslideSub:"When off, the showcase only changes with the arrows.",
-  sCurrencySub:"Prices are shown from this region's stores.",sStoreSub:"The list and showcase only show this store.",sDefaultSortSub:"How the list is sorted when the site opens.",
-  sAbout:"Help and about",sLegal:"Privacy and data notice",sResetPrefs:"Reset site preferences",sResetSub:"Theme, language, currency and list preferences go back to defaults.",sResetBtn:"Reset",sResetDone:"Preferences reset.",
+  sStoreSub:"The list and showcase only show this store.",sDefaultSortSub:"How the list is sorted when the site opens.",
+  sAbout:"Help and about",sLegal:"Privacy and data notice",sResetPrefs:"Reset site preferences",sResetSub:"Theme, language and list preferences go back to defaults.",sResetBtn:"Reset",sResetDone:"Preferences reset.",
   sAccountLink:"Profile and account",sAccountLinkSub:"Profile picture, notifications, password and account deletion",
   vitrinTitle:"Best sellers",vitrinSub:"hover to pause",
   spotEyebrow:"Game of the day",spotCta:"See prices",soundOn:"Unmute",soundOff:"Mute",
-  elsewhereCard:"{c}: {p}",pendingPrice:"Fetching price…",
-  elsewhereTitle:"Prices in other regions",elsewhereNote:"This game has no price in your region. Cheapest prices elsewhere:",region:"Region",
+  pendingPrice:"Fetching price…",
+  region:"Region",
   ratingLabel:"Steam rating",reviews:"{n} reviews",
   r1:"Overwhelmingly positive",r2:"Very positive",r3:"Mostly positive",r4:"Mixed",r5:"Mostly negative",r6:"Negative",
   sStore:"Preferred store",sAutoslide:"Auto-advance the deals showcase",toTop:"Back to top",approxTitle:"Approximate amount at today's exchange rate; the store's own rate may differ",cmpAdd:"Compare",cmpRemove:"Remove from compare",cmpBar:"Compare",cmpTitle:"Compare games",cmpFull:"You can compare up to 3 games.",cmpClear:"Clear comparison",cmpNeed:"Pick at least 2 games to compare.",cmpPrice:"Lowest price",cmpShop:"Store",cmpRegular:"Regular price",cmpAtl:"All-time low",cmpRating:"Steam rating",cmpRelease:"Release date",cmpTags:"Categories",cmpAdvice:"Advice",cmpCheapest:"Cheapest",endTitle:"Deals ending this week",endSub:"Grab them before they expire",endDH:"{d}d {h}h left",endHM:"{h}h {m}m left",endM:"{m}m left",endDone:"Sale ended",freeTitle:"Free right now",freeSub:"Free for a limited time; don't miss it",freeNow:"Free",freeUntil:"Until {d}",freeNoEnd:"No end date given",simTitle:"Similar games",slideOff:"{p}% off",prevSlide:"Previous game",nextSlide:"Next game",
@@ -864,7 +855,7 @@ const I18N={
   searching:"Searching all stores…",more:"Show more",
   loading:"Loading prices…",loadErr:"Can't reach the server. Make sure it's running (npm start) and reload the page.",
   syncing:"Fetching prices for the first time, this can take a minute or two. Reload shortly.",
-  noPrice:"No price found in this region",freeGame:"Free to play",usRef:"US price: {p}",
+  noPrice:"No price in Turkish stores",freeGame:"Free to play",
   detailLoading:"Loading store prices…",detailErr:"Couldn't load details. Close the game and open it again.",
   from:"Lowest",bestNow:"Cheapest right now",endsOn:"Sale ends",noEnd:"Not specified",release:"Release date",developer:"Developer",
   store:"Store",price:"Price",normal:"Regular",cheapest:"Cheapest",goStore:"Go to store",pricesTitle:"Store prices",
@@ -895,7 +886,7 @@ const I18N={
   wF1:"Every store in one list",wF1s:"Lowest price and price history chart",wF2:"Wishlist",wF2s:"Save games you like and set a target price",wF3:"Deal alerts",wF3s:"We email you when the price drops",
   wNoAcc:"No account yet?",wHasAcc:"Already a member?",wGuest:"Continue without an account",or:"or",
   sAppearance:"Appearance",sAccent:"Site color",sAccentSub:"Buttons, logo and highlight color.",acc_gold:"Gold",acc_mint:"Mint",acc_violet:"Lilac",acc_coral:"Coral",sTheme:"Theme",sBackdrop:"Faded game cover background on the home page",themeSystem:"System",themeLight:"Light",themeDark:"Dark",
-  sRegion:"Region and language",sCurrency:"Currency",sLang:"Language",sLangRow:"Site language",
+  sLang:"Language",sLangRow:"Site language",
   sList:"Game list",sDefaultSort:"Default sorting",sShowAll:"Show games without prices",
   sNotify:"Notifications",sDrops:"Email me when a wishlist game gets cheaper",sMinCut:"Only after a discount of",anyCut:"Any drop",
   sAccount:"Account",sName:"Display name",save:"Save",saved:"Saved.",
@@ -907,7 +898,7 @@ const I18N={
    ["What is this site for?","It shows the prices of PC games on Steam, Epic Games Store, GOG, Microsoft Store and other authorized stores in one place, so you can see where a game is cheapest and go straight to that store."],
    ["Do I buy games here?","No. “Go to store” takes you to the store's own page; you pay there."],
    ["How often are prices updated?","Popular games and wishlisted games every hour, everything else once a day."],
-   ["Why do some games have no price?","The game may not be sold in your region, may be free, or its price may not have been fetched yet. Pick another currency to check other regions."],
+   ["Why do some games have no price?","The game may not be sold in Turkish stores, may be free, or its price may not have been fetched yet."],
    ["How does the wishlist work?","Sign up and add a game; we email you when its price drops. You can turn these emails off in Profile → Notifications or only get them for big discounts."],
    ["Are PlayStation, Xbox and Nintendo prices available?","For now it's PC stores. Console stores are in the works."]
   ]}
@@ -926,7 +917,7 @@ async function api(path,opt={}){
 }
 const state={
   lang:store.get("g_lang","tr"),   // varsayılan Türkçe; İngilizce seçilebilir ve hatırlanır
-  cur:store.get("g_cur","TRY"),   // site Türk oyuncular için: herkes TL ile başlar, isteyen değiştirir
+  cur:"TRY",   // fiyatlar her zaman Türkiye mağazalarından, TL
   theme:store.get("g_theme","system"),
   sort:store.get("g_sort","popular"),
   showAll:store.get("g_all",false),
@@ -945,7 +936,6 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const loc=()=>state.lang==="tr"?"tr-TR":"en-US";
 const countryCode=()=>COUNTRIES.find(c=>c[0]===state.cur)[1];
-const curOf=country=>(COUNTRIES.find(c=>c[1]===country)||COUNTRIES[0])[0];
 const remember=list=>{for(const g of list)state.known[g.id]={...state.known[g.id],...g};return list};
 const num=n=>Number(n||0).toLocaleString(loc());
 function money(v,cur){
@@ -1135,8 +1125,6 @@ async function authRequest(mode,{email,password,name,consent}){
   state.user=d.user;
   store.set("g_welcomed",true);
   toast(mode==="up"?t("registered",{e:state.user.email}):t("welcome",{n:state.user.name}));
-  const saved=curOf(state.user.country);
-  if(saved!==state.cur){state.cur=saved;store.set("g_cur",saved);renderControls();load()}
   await loadWish();
 }
 const authErr=code=>t({fill:"errFill",pass:"errPass",email:"errEmail",exists:"errExists",wrong:"errWrong",rate:"errRate",token:"errToken",consent:"errConsent"}[code]||"errServer");
@@ -1175,8 +1163,6 @@ function renderStatic(){
   renderControls();applyTheme();
 }
 function renderControls(){
-  $("cur").innerHTML=COUNTRIES.map(c=>`<option value="${c[0]}">${c[0]} · ${state.lang==="tr"?c[2]:c[3]}</option>`).join("");
-  $("cur").value=state.cur;
   $("sort").innerHTML=SORTS.map(s=>`<option value="${s}">${t("sort_"+s)}</option>`).join("");
   $("sort").value=state.sort;
   $("onlyDeals").checked=state.onlyDeals;
@@ -1194,7 +1180,6 @@ function renderCats(){
   $("cats").innerHTML=`<button data-cat="" aria-pressed="${!state.cat}">${t("allCats")}</button>`+
     cats.map(c=>`<button data-cat="${esc(c.tag)}" aria-pressed="${state.cat===c.tag}">${esc(state.lang==="tr"?c.tr:c.en)}<small>${num(c.n)}</small></button>`).join("");
 }
-const regionName=code=>{const c=COUNTRIES.find(x=>x[1]===code);return c?(state.lang==="tr"?c[2]:c[3]):code};
 function rateInfo(r){
   const tot=r.pos+r.neg,pct=Math.round(r.pos/tot*100);
   const k=tot>=500&&pct>=95?"r1":pct>=80?"r2":pct>=70?"r3":pct>=40?"r4":pct>=20?"r5":"r6";
@@ -1206,7 +1191,7 @@ function rateBadge(r,long=false){
 }
 function renderStats(){
   const s=state.config.stats;
-  $("stats").innerHTML=s?[[num(s.games),t("statGames")],[num(s.shops),t("statShops")],["10",t("statRegions")]]
+  $("stats").innerHTML=s?[[num(s.games),t("statGames")],[num(s.shops),t("statShops")],[num(s.deals??0),t("statDeals")]]
     .map(([b,l])=>`<li><b>${b}</b><span>${l}</span></li>`).join(""):"";
 }
 function renderFooter(){$("updated").textContent=state.updatedAt?t("updated",{t:ago(state.updatedAt)}):""}
@@ -1297,7 +1282,6 @@ function renderGrid(){
       <div class="row1"><div class="meta">${esc([...g.tags,year].filter(Boolean).join(", "))||"&nbsp;"}</div>${g.rating?rateBadge(g.rating):""}</div>
       ${g.low?`<div class="from">${t("from")}, ${esc(g.low.shop)}</div>${tag(g.low)}${isATL(g.low)?`<div style="margin-top:5px">${atlBadge(g.low)}</div>`:""}`
         :g.free?`<div class="from">${t("freeGame")}</div>`
-        :g.other?`<div class="from">${t("noPrice")}</div><div class="elsewhere">${t("elsewhereCard",{c:esc(regionName(g.other.country)),p:`<b>${money(g.other.price,g.other.currency)}</b>`})}</div>`
         :`<div class="from">${t(g.pending?"pendingPrice":"noPrice")}</div>`}</button>`;
   }).join(""):state.searching?`<p class="empty">${t("searching")}</p>`
     :`<div class="nada">${ICON_SEARCH}<b>${t("emptyTitle")}</b><p>${t("noResult")}</p>${hasFilters()?`<button class="btn" id="clearFilters">${t("emptyClear")}</button>`:""}</div>`;
@@ -1580,8 +1564,6 @@ function renderDetail(id){
        <td>${tag(p,false)}</td><td>${money(p.regular,p.currency)}</td><td>${p.cut&&p.expiry?fmtDate(p.expiry):"—"}</td>
        <td>${p.url?`<a class="shoplink" href="${esc(p.url)}" target="_blank" rel="noopener">${t("goStore")} ↗</a>`:""}</td></tr>`).join("")}
      </tbody></table></div>${others.length?`<p class="note">${t("otherCur",{c:others.join(", ")})}</p>`:""}`
-     :d.elsewhere?.length?`<p class="note">${t("elsewhereNote")}</p><div class="tbl-wrap"><table><thead><tr><th>${t("region")}</th><th>${t("store")}</th><th>${t("price")}</th></tr></thead><tbody>
-       ${d.elsewhere.map(e=>`<tr><td>${esc(regionName(e.country))}</td><td>${esc(e.shop)}</td><td>${tag({price:e.price,currency:e.currency,cut:e.cut},false)}</td></tr>`).join("")}</tbody></table></div>`
      :`<p class="note">${t(g.free?"freeGame":g.pending?"pendingPrice":"noPrice")}</p>`;
     const c=chart(d);
     if(c.svg||c.lows)chartPanel=`<div class="panel"><div class="panelhead"><h3>${t("chartTitle")}</h3>${c.range}</div>${c.trend}${c.svg}${c.lows}</div>`;
@@ -1600,7 +1582,6 @@ function renderDetail(id){
      </dl>
      <div class="best">
       ${low?`<div><div class="lbl">${t("bestNow")}, ${esc(low.shop)}</div>${tag(low)}${isATL(low)?` ${atlBadge(low,true)}`:""}</div>`
-        :g.other?`<div><div class="lbl">${t("noPrice")}</div><div class="elsewhere note" style="margin:4px 0 0">${t("elsewhereCard",{c:esc(regionName(g.other.country)),p:`<b>${money(g.other.price,g.other.currency)}</b>`})}</div></div>`
         :`<div class="lbl">${t(g.free?"freeGame":"noPrice")}</div>`}
       <div class="actions">${wishBtn}<button class="btn" data-cmp="${id}">${state.compare.includes(id)?"✓ "+t("cmpRemove"):"⇄ "+t("cmpAdd")}</button></div>
       ${state.user&&inWish?targetForm(id,low):""}
@@ -1902,10 +1883,6 @@ function openProfile(tab){
   }
   openDialog(profileTab==="admin");
 }
-function setCurrency(c){
-  state.cur=c;store.set("g_cur",c);renderControls();load();
-  if(state.user)api("/api/me",{method:"PATCH",body:{country:countryCode()}}).then(d=>state.user=d.user).catch(()=>{});
-}
 function setLang(l){
   state.lang=l;store.set("g_lang",l);renderAll();
   if(state.user)api("/api/me",{method:"PATCH",body:{lang:l}}).catch(()=>{});
@@ -2032,7 +2009,6 @@ dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
 dlg.addEventListener("close",()=>{state.open=null;syncUrl()});
 $("q").addEventListener("input",e=>{state.q=e.target.value;onSearchInput()});
 $("qClear").addEventListener("click",()=>{$("q").value="";state.q="";onSearchInput();$("q").focus()});
-$("cur").addEventListener("change",e=>setCurrency(e.target.value));
 $("sort").addEventListener("change",e=>setSort(e.target.value));
 $("onlyDeals").addEventListener("change",e=>{state.onlyDeals=e.target.checked;loadList(true)});
 $("shop").addEventListener("change",e=>setShop(e.target.value));
@@ -2065,7 +2041,7 @@ function legalHtml(kind){
      <li><b>Kimlik ve iletişim:</b> kullanıcı adı, e-posta adresi.</li>
      <li><b>İşlem güvenliği:</b> şifrenin geri döndürülemez biçimde şifrelenmiş özeti, oturum bilgisi, e-posta doğrulama ve şifre sıfırlama kayıtları, kötüye kullanımı önlemek için kısa süreliğine tutulan IP adresi.</li>
      <li><b>Kullanım ve tercih bilgileri:</b> istek listesi, hedef fiyatlar, gönderilen bildirimlerin kaydı, bölge, dil ve bildirim tercihleri, kayıt sırasında bu metnin gösterildiği tarih.</li></ul>
-    <p>Üye olmadan siteyi kullanırken hesap bilgisi toplanmaz; dil, tema ve para birimi gibi tercihler yalnızca kendi tarayıcında saklanır.</p>
+    <p>Üye olmadan siteyi kullanırken hesap bilgisi toplanmaz; dil ve tema gibi tercihler yalnızca kendi tarayıcında saklanır.</p>
     <h3>3. İşleme amaçları</h3><ul>
      <li>Üyelik hesabının oluşturulması ve yönetilmesi,</li>
      <li>İstek listesi, hedef fiyat ve fiyat düşüşü bildirimlerinin gönderilmesi,</li>
@@ -2089,7 +2065,7 @@ function legalHtml(kind){
    cookies:`<h2>Çerez Bilgilendirmesi</h2>
     <p>${site}, yalnızca sitenin çalışması için zorunlu olan çerezleri ve tarayıcı depolamasını kullanır. Reklam, analiz ya da takip çerezi kullanılmaz; bu yüzden ayrıca onay istenmez.</p>
     <h3>Zorunlu çerez</h3><ul><li><b>sid:</b> Giriş yaptığında oturumunu açık tutar. Yalnızca sunucu okuyabilir, 30 gün sonra ya da çıkış yaptığında silinir.</li></ul>
-    <h3>Tarayıcı depolaması</h3><p>Tema, dil, para birimi, sıralama ve mağaza tercihlerin ile karşılama ekranının ve bu bilgilendirmenin görülüp görülmediği yalnızca senin tarayıcında saklanır ve sunucuya gönderilmez.</p>
+    <h3>Tarayıcı depolaması</h3><p>Tema, dil, sıralama ve mağaza tercihlerin ile karşılama ekranının ve bu bilgilendirmenin görülüp görülmediği yalnızca senin tarayıcında saklanır ve sunucuya gönderilmez.</p>
     <h3>Nasıl silerim?</h3><p>Tarayıcının ayarlarından bu sitenin çerezlerini ve site verilerini istediğin zaman silebilirsin; bu durumda oturumun kapanır ve tercihlerin sıfırlanır.</p>`},
   en:{
    kvkk:`<h2>Personal Data Notice (KVKK)</h2>
@@ -2117,7 +2093,7 @@ function legalHtml(kind){
    cookies:`<h2>Cookie Notice</h2>
     <p>${site} only uses cookies and browser storage that are strictly necessary for the site to work. There are no advertising, analytics or tracking cookies, so no separate consent is requested.</p>
     <h3>Necessary cookie</h3><ul><li><b>sid:</b> keeps you signed in. Readable only by the server, removed after 30 days or when you sign out.</li></ul>
-    <h3>Browser storage</h3><p>Your theme, language, currency, sorting and store preferences, and whether you've seen the welcome screen and this notice, are stored only in your browser.</p>
+    <h3>Browser storage</h3><p>Your theme, language, sorting and store preferences, and whether you've seen the welcome screen and this notice, are stored only in your browser.</p>
     <h3>How to delete</h3><p>You can clear this site's cookies and data in your browser settings at any time; you'll be signed out and your preferences reset.</p>`}};
   return L[state.lang][kind];
 }
