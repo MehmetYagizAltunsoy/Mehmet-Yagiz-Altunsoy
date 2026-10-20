@@ -1,6 +1,6 @@
 {
   "name": "fiyatavi",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "PC oyun fiyatlarını mağazalar ve bölgeler arasında karşılaştıran, fiyat düşünce mail atan web sitesi.",
   "keywords": [
     "oyun",
@@ -19,6 +19,7 @@
     "start": "node src/server.js",
     "sync": "node src/sync.js",
     "kontrol": "node src/kontrol.js",
+    "mailtest": "node src/mailtest.js",
     "test": "node --no-warnings --test --test-reporter=spec test/*.test.js"
   },
   "dependencies": {

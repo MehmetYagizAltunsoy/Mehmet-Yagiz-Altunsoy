@@ -11,7 +11,7 @@ import { blockedShops, isBlocked, rememberSamples } from "./shops.js";
 
 // Site para birimi → IsThereAnyDeal ülkesi (EUR için Almanya fiyatları)
 export const COUNTRIES = ["US", "DE", "GB", "JP", "BR", "CA", "AU", "MX", "CH", "TR"];
-export const HISTORY_MONTHS = 3;
+export const HISTORY_MONTHS = 36;   // oyun sayfasındaki grafik için en fazla 3 yıllık fiyat geçmişi
 const CATALOG_SIZE = Math.min(Math.max(Number(process.env.CATALOG_SIZE || 1000), 0), 1000);
 const TAIL_HOURS = Number(process.env.TAIL_REFRESH_HOURS || 24);   // az bakılan oyunlar kaç saatte bir
 const BACKGROUND_SHARE = 0.6;                                       // arka plan işleri limitin en fazla %60'ı
@@ -273,6 +273,10 @@ export async function enrichInBackground() {
 const inflight = new Map();
 const qFetched = db.prepare("SELECT 1 FROM history_fetched WHERE game_id = ? AND country = ?");
 const markFetched = db.prepare("INSERT OR IGNORE INTO history_fetched (game_id, country) VALUES (?, ?)");
+// Geçmiş eskiden 3 ay çekiliyordu; 3 yıla çıkınca oyunlar açıldıkça geçmişleri bir kez yeniden çekilsin
+if (!db.prepare("SELECT 1 FROM meta WHERE key = 'history_v2'").get()) {
+  db.exec("DELETE FROM history_fetched; INSERT OR REPLACE INTO meta (key, value) VALUES ('history_v2', '1')");
+}
 const insHist = db.prepare(`INSERT INTO price_history (game_id, country, day, lowest, currency)
   VALUES (?,?,?,?,?)
   ON CONFLICT(game_id, country, day) DO UPDATE SET lowest = MIN(lowest, excluded.lowest)`);

@@ -143,7 +143,9 @@ CREATE TABLE IF NOT EXISTS media (game_id TEXT PRIMARY KEY, video TEXT, poster T
 CREATE INDEX IF NOT EXISTS games_owners ON games (owners);
 CREATE INDEX IF NOT EXISTS games_appid ON games (appid);
 `);   // fiyat düşünce mail at
-addColumn("users", "min_cut", "INTEGER DEFAULT 0");        // sadece bu indirim oranından sonra
+addColumn("users", "min_cut", "INTEGER DEFAULT 0");
+addColumn("users", "weekly_digest", "INTEGER DEFAULT 1");   // haftalık özet maili açık mı
+addColumn("users", "last_digest_at", "TEXT");               // son haftalık özetin gönderildiği zaman        // sadece bu indirim oranından sonra
 if (!db.prepare("SELECT 1 FROM lows LIMIT 1").get()) {
   db.exec(`INSERT OR IGNORE INTO lows (game_id, country, shop, price, regular, currency, cut, expiry)
     SELECT game_id, country, shop_name, price, regular, currency, cut, expiry FROM prices p

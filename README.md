@@ -12,9 +12,14 @@ PC oyunlarının fiyatlarını Steam, Epic Games Store, GOG, Microsoft Store ve 
 - Seçilen bölgede fiyatı olmayan oyunlarda diğer bölgelerin fiyatları
 - Her oyunun paylaşılabilir adresi (ör. `/oyun/elden-ring`) ve "Linki kopyala" düğmesi
 - "Şu an ücretsiz" oyunlar, benzer oyun önerileri, güncel kurla yaklaşık fiyat karşılıkları
-- Son 3 ayın fiyat grafiği, 3 ayın ve tüm zamanların en düşük fiyatı
+- Fiyat geçmişi grafiği (3 ay / 6 ay / 1 yıl / tümü), dönemin ve tüm zamanların en düşük fiyatı
+- "Şimdi al mı, bekle mi?" önerisi: fiyat geçmişine bakarak almak için iyi zaman olup olmadığını söyler
+- En fazla 3 oyunu yan yana karşılaştırma (fiyat, en düşük fiyat, puan, öneri)
+- Ana sayfada "Bu hafta biten indirimler" (geri sayımlı)
 - Arama, A–Z filtresi, sıralama (popüler, ucuzdan pahalıya, en yüksek indirim, en yeni…)
 - Üyelik sistemi (e-posta doğrulama, şifremi unuttum), istek listesi, istek listesine eklemede ve fiyat düşüşünde mail bildirimi
+- Tasarımlı HTML mailler ve haftalık özet maili (istek listesindeki oyunların haftalık fiyat durumu)
+- Yönetim sekmesi: kullanıcı, oyun, mail ve sistem istatistikleri (sadece yöneticiler görür)
 - Hedef fiyat alarmı ("bu oyun X TL'ye inince haber ver") ve "tüm zamanların en düşüğü" rozeti
 - Oyun sayfasında Steam'den sistem gereksinimleri
 - KVKK aydınlatma metni, gizlilik politikası ve çerez bilgilendirmesi (taslak; yayına almadan önce hukukçuya kontrol ettirilmeli)
@@ -60,7 +65,8 @@ npm start         # http://localhost:3000
 | `npm run kurulum` | API anahtarlarını ve site ayarlarını girer / değiştirir |
 | `npm run kontrol` | Kaç oyunun fiyatı olduğunu, mağazaları ve gizlenen mağazaları gösterir |
 | `npm run sync` | Fiyatları elle bir kez günceller |
-| `npm test` | Otomatik testleri çalıştırır (güvenlik, fiyat bildirimleri, veri tabanı şeması) |
+| `npm test` | Otomatik testleri çalıştırır (güvenlik, fiyat bildirimleri, haftalık özet, veri tabanı şeması) |
+| `npm run mailtest` | Mail ayarlarını dener, kendine örnek bir mail gönderir |
 
 ## Ayarlar (`.env`)
 
@@ -78,6 +84,7 @@ Gizli bilgiler `.env` dosyasında durur ve GitHub'a yüklenmez (`.gitignore`). �
 | `CONTROLLER_NAME` | KVKK metinlerindeki veri sorumlusu |
 | `SMTP_*`, `MAIL_FROM` | Mail gönderimi (boşsa mailler terminale yazılır) |
 | `SHOPS_HIDE` | Sitede gösterilmeyecek mağazalar (virgülle) |
+| `ADMIN_EMAILS` | Yönetim sekmesini görebilecek e-postalar (virgülle; boşsa `SUPPORT_EMAIL`) |
 
 ## Proje yapısı
 
@@ -98,6 +105,8 @@ fiyatavi/
 │   ├── notify.js       İstek listesi ve fiyat düşüş bildirimleri
 │   ├── mailer.js       Mail gönderimi
 │   ├── accountmail.js  E-posta doğrulama ve şifre sıfırlama mailleri
+│   ├── mailtemplate.js HTML mail şablonu
+│   ├── mailtest.js     Mail ayarı denemesi
 │   ├── setup.js        Kurulum sihirbazı
 │   └── kontrol.js      Durum raporu
 ├── test/               Otomatik testler (npm test)

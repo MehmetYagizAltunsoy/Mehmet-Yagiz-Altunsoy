@@ -82,3 +82,44 @@ test("fiyat hedefin üstüne çıkıp tekrar inerse yeniden haber verilir", asyn
   await checkPriceDrops();
   assert.deepEqual(bildirimler(kullanici), ["target", "target"]);
 });
+
+// ---------- Haftalık özet ----------
+const { sendWeeklyDigests, buildDigest } = await import("../src/notify.js");
+const ozetSayisi = (kullanici) =>
+  db.prepare("SELECT COUNT(*) AS n FROM notifications WHERE user_id = ? AND kind = 'digest'").get(kullanici).n;
+
+test("haftalık özet: ilk turda gönderilmez, sadece sayaç başlar", async () => {
+  const { kullanici } = hazirla();
+  db.prepare("UPDATE users SET last_digest_at = NULL WHERE id = ?").run(kullanici);
+  await sendWeeklyDigests();
+  assert.equal(ozetSayisi(kullanici), 0);
+  assert.ok(db.prepare("SELECT last_digest_at FROM users WHERE id = ?").get(kullanici).last_digest_at);
+});
+
+test("haftalık özet: 7 gün dolmadan tekrar gönderilmez, dolunca gönderilir", async () => {
+  const { kullanici } = hazirla();
+  db.prepare("UPDATE users SET last_digest_at = datetime('now', '-3 days') WHERE id = ?").run(kullanici);
+  await sendWeeklyDigests();
+  assert.equal(ozetSayisi(kullanici), 0, "3 gün sonra gitmemeli");
+  db.prepare("UPDATE users SET last_digest_at = datetime('now', '-8 days') WHERE id = ?").run(kullanici);
+  await sendWeeklyDigests();
+  assert.equal(ozetSayisi(kullanici), 1, "8 gün sonra gitmeli");
+});
+
+test("haftalık özeti kapatan kullanıcıya özet gitmez", async () => {
+  const { kullanici } = hazirla();
+  db.prepare("UPDATE users SET weekly_digest = 0, last_digest_at = datetime('now', '-30 days') WHERE id = ?").run(kullanici);
+  await sendWeeklyDigests();
+  assert.equal(ozetSayisi(kullanici), 0);
+});
+
+test("haftalık özet maili indirimdeki oyunları ve fiyat değişimini yazar", () => {
+  const { kullanici, oyun } = hazirla({ simdi: 500, indirim: 50 });
+  db.prepare("INSERT INTO price_history (game_id, country, day, lowest, currency) VALUES (?, 'TR', date('now', '-8 days'), 1000, 'TRY')").run(oyun);
+  const u = db.prepare("SELECT * FROM users WHERE id = ?").get(kullanici);
+  const mail = buildDigest(u);
+  assert.match(mail.subject, /1 oyun indirimde/);
+  assert.match(mail.text, /-%50/);
+  assert.match(mail.text, /Geçen haftaya göre .* ucuz/);
+  assert.match(mail.html, /<table/);
+});

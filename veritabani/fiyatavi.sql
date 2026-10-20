@@ -56,6 +56,8 @@ CREATE TABLE users (
     consent_at      TEXT    NOT NULL,                  -- KVKK onayının verildiği zaman
     notify_drops    INTEGER NOT NULL DEFAULT 1 CHECK (notify_drops IN (0, 1)),
     min_cut         INTEGER NOT NULL DEFAULT 0 CHECK (min_cut BETWEEN 0 AND 100),
+    weekly_digest   INTEGER NOT NULL DEFAULT 1 CHECK (weekly_digest IN (0, 1)),   -- haftalık özet maili açık mı
+    last_digest_at  TEXT,                              -- son haftalık özetin gönderildiği zaman
     created_at      TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
@@ -155,7 +157,7 @@ CREATE TABLE notifications (
     id       INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     game_id  TEXT    REFERENCES games(id) ON DELETE SET NULL,
-    kind     TEXT    NOT NULL CHECK (kind IN ('added', 'drop', 'target')),
+    kind     TEXT    NOT NULL CHECK (kind IN ('added', 'drop', 'target', 'digest')),
     text     TEXT    NOT NULL,
     sent_at  TEXT    NOT NULL DEFAULT (datetime('now'))
 );

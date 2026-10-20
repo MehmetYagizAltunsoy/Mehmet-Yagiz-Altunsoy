@@ -111,6 +111,15 @@ header.top.compact .icon{width:34px;height:34px}
 .btn.primary{background:var(--coin-bg);color:var(--on-coin);border-color:transparent;font-weight:600}
 .btn.primary:hover{filter:brightness(1.05)}
 .btn.ghost{background:transparent}
+.panelhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.panelhead h3{margin:0}
+.seg.rangeseg button{height:30px;padding:0 10px;font-size:13px}
+.advice{display:flex;flex-direction:column;gap:3px;margin-top:12px;padding:12px 14px;border-radius:12px;border-left:4px solid var(--muted);background:var(--surface-2);font-size:14.5px;line-height:1.45}
+.advice b{font:700 15px var(--display)}
+.advice.good{border-left-color:var(--down);background:color-mix(in srgb,var(--down) 12%,var(--surface))}
+.advice.good b{color:var(--down)}
+.advice.wait{border-left-color:var(--coin-bg);background:color-mix(in srgb,var(--coin-bg) 16%,var(--surface))}
+.advice.ok b,.advice.info b{color:var(--text)}
 .copylink{height:36px;font-size:14px;color:var(--muted)}
 .copylink svg{width:16px;height:16px}
 .copylink:hover{color:var(--text);border-color:var(--coin)}
@@ -202,6 +211,36 @@ section{padding:22px 0}
 .freebadge{display:inline-flex;align-items:center;gap:6px;font:700 13px var(--display);color:#0b3b2e;background:#57e3b0;padding:3px 10px;border-radius:999px}
 .free .was{color:var(--muted);text-decoration:line-through;font-size:13px;margin-left:6px}
 .free .ends{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+.countdown{font-weight:600;color:var(--text)}
+.atiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.atile{display:flex;flex-direction:column;gap:2px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.atile b{font:700 26px/1.1 var(--display)}
+.atile span{font-weight:600}
+.atile small{color:var(--muted);font-size:12.5px}
+.agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:12px}
+.alist{list-style:none;margin:6px 0 0;padding:0}
+.alist li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:14px}
+.alist li:first-child{border-top:0}
+.alist small{color:var(--muted);white-space:nowrap}
+ol.alist{counter-reset:a}
+.cmpbar{position:fixed;left:calc(20px + env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:36;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 34px rgba(0,0,0,.25)}
+.cmpbar[hidden]{display:none}
+.cmpthumbs{display:flex;gap:6px}
+.cmpthumb .cov{width:34px;height:45px;border-radius:6px;font-size:0;padding:0}
+.cmpbar .btn[disabled]{opacity:.55;cursor:not-allowed}
+table.cmp{width:100%;border-collapse:collapse;min-width:560px}
+table.cmp th,table.cmp td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.cmp tbody th{color:var(--muted);font-weight:500;font-size:14px;white-space:nowrap;width:1%}
+table.cmp thead th{vertical-align:bottom}
+.cmpcov{display:grid;gap:8px;background:none;border:0;padding:0;cursor:pointer;text-align:left;color:var(--text);font:inherit}
+.cmpcov .cov{width:110px;height:146px;border-radius:10px;font-size:0;padding:0}
+.cmpcov b{font:600 16px/1.25 var(--display)}
+.advtag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:13px;font-weight:600;background:var(--surface-2)}
+.advtag.good{background:color-mix(in srgb,var(--down) 18%,var(--surface));color:var(--down)}
+.advtag.wait{background:color-mix(in srgb,var(--coin-bg) 30%,var(--surface))}
+@media (max-width:640px){.cmpbar{left:12px;right:84px;bottom:14px}.cmpbar .btn{flex:1}}
+.countdown.soon{color:var(--up)}
+.ending .tag{margin-top:2px}
 .sim{margin-top:18px}
 .simrow{display:grid;grid-auto-flow:column;grid-auto-columns:150px;gap:14px;overflow-x:auto;padding-bottom:6px}
 .simcard{background:none;border:0;padding:0;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -286,6 +325,8 @@ dialog::backdrop{background:rgba(10,10,25,.62);backdrop-filter:blur(3px)}
 .best .lbl{font-size:13px;color:var(--muted)}
 .best .tag .now{font-size:28px}
 .best .actions{margin-left:auto}
+.best .actions{flex-wrap:wrap}
+.dh>div{min-width:0}
 .dgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;margin-top:22px;align-items:start}
 .panel{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
 .panel h3{font:600 17px var(--display);margin:0 0 10px}
@@ -540,6 +581,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     <div class="show" id="show" tabindex="0" aria-roledescription="carousel"></div>
   </section>
 
+  <section id="endingSec" hidden>
+    <div class="sec-head"><h2 data-i="endTitle"></h2><span data-i="endSub"></span></div>
+    <div class="frees" id="endings"></div>
+  </section>
   <section id="freeSec" hidden>
     <div class="sec-head"><h2 data-i="freeTitle"></h2><span data-i="freeSub"></span></div>
     <div class="frees" id="frees"></div>
@@ -571,6 +616,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   <div class="wall" id="wall" aria-hidden="true"></div>
   <div class="welcome-card" role="dialog" aria-modal="true" aria-labelledby="wTitle" id="welcomeCard"></div>
 </div>
+<div class="cmpbar" id="cmpBar" hidden></div>
 <button class="totop" id="toTop" type="button">
   <svg class="ring" viewBox="0 0 52 52" aria-hidden="true"><circle class="track" cx="26" cy="26" r="24"/><circle class="prog" id="toTopProg" cx="26" cy="26" r="24" stroke-dasharray="150.8" stroke-dashoffset="150.8"/></svg>
   <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -600,7 +646,16 @@ const I18N={
   sort_bestsellers:"Çok satanlar",sort_favorites:"En çok favorilenen",sort_rating:"En yüksek puan",
   onlyDeals:"Sadece indirimdekiler",allShops:"Tüm mağazalar",allCats:"Tümü",
   profile:"Profil",pAvatar:"Profil resmi",pAvatarSub:"Sevdiğin bir oyunun kapağını profil resmi yap.",pAvatarSearch:"Oyun ara…",pAvatarNone:"Bu ada uyan kapak bulunamadı.",pAvatarSaved:"Profil resmin güncellendi.",pAvatarRemove:"Resmi kaldır",
-  pTabProfile:"Profil",pTabNotify:"Bildirimler",pTabSecurity:"Güvenlik",
+  pTabProfile:"Profil",pTabNotify:"Bildirimler",pTabSecurity:"Güvenlik",pTabAdmin:"Yönetim",
+  sDigest:"Haftalık özet maili",sDigestSub:"Haftada bir, istek listendeki oyunların fiyatlarını tek mailde gönderir.",
+  aUsers:"Kullanıcı",aUsersSub:"{v} doğrulanmış · son 7 günde {n} yeni",aWish:"İstek listesi kaydı",aWishSub:"{u} kullanıcı · {t} hedef fiyat",
+  aGames:"Fiyatı olan oyun",aGamesSub:"{s} oyun şu an indirimde",aMails:"Gönderilen bildirim",aSmtpOn:"Mail ayarı açık",aSmtpOff:"Mail ayarı yok (terminale yazılıyor)",
+  aTop:"En çok takip edilen oyunlar",aMails7:"Son 7 günün bildirimleri",aRecentUsers:"Son kayıt olanlar",aSystem:"Sistem",aRecentMails:"Son gönderilen bildirimler",
+  aLastSync:"Son fiyat güncellemesi",aApi:"API kullanımı (5 dk)",aDb:"Veri tabanı",aPriceRows:"fiyat kaydı",aUptime:"Sunucu açık",
+  aDigestTest:"Haftalık özeti dene",aDigestTestSub:"Haftalık özetin bir örneğini şimdi kendi adresine gönderir.",aSend:"Bana gönder",
+  aDigestSent:"Haftalık özet gönderildi, gelen kutuna bak.",aDigestNoSmtp:"Özet hazırlandı ama mail ayarı olmadığı için terminale yazıldı.",
+  aNeedVerify:"Önce e-posta adresini doğrulamalısın.",aNeedWish:"Önce istek listene oyun eklemelisin.",
+  kAdded:"Listeye ekleme",kDrop:"Fiyat düştü",kTarget:"Hedef fiyat",kDigest:"Haftalık özet",
   pName:"Görünen ad",pNameSub:"Sitede ve maillerde sana böyle hitap ederiz.",pEmail:"E-posta",pVerified:"Doğrulandı",pUnverified:"Doğrulanmadı",
   pWish:"İstek listem",pWishSub:"{n} oyun takipte",
   pPassTitle:"Şifre değiştir",pPassCur:"Mevcut şifre",pPassNew:"Yeni şifre",pPassSave:"Şifreyi değiştir",pPassDone:"Şifren değişti. Diğer cihazlardaki oturumların kapatıldı.",
@@ -615,7 +670,7 @@ const I18N={
   elsewhereTitle:"Başka bölgelerdeki fiyatlar",elsewhereNote:"Bu oyunun seçtiğin bölgede fiyatı yok. Diğer bölgelerdeki en ucuz fiyatlar:",region:"Bölge",
   ratingLabel:"Steam puanı",reviews:"{n} değerlendirme",
   r1:"Olağanüstü olumlu",r2:"Çok olumlu",r3:"Çoğunlukla olumlu",r4:"Karışık",r5:"Çoğunlukla olumsuz",r6:"Olumsuz",
-  sStore:"Tercih ettiğim mağaza",sAutoslide:"İndirim vitrini kendiliğinden kaysın",toTop:"Başa dön",approxTitle:"Güncel kurla yaklaşık karşılık; mağazanın kendi kuru farklı olabilir",freeTitle:"Şu an ücretsiz",freeSub:"Kısa süreliğine bedava; kaçırma",freeNow:"Ücretsiz",freeUntil:"{d} tarihine kadar",freeNoEnd:"Bitiş tarihi belirtilmemiş",simTitle:"Benzer oyunlar",slideOff:"-%{p} indirim",prevSlide:"Önceki oyun",nextSlide:"Sonraki oyun",
+  sStore:"Tercih ettiğim mağaza",sAutoslide:"İndirim vitrini kendiliğinden kaysın",toTop:"Başa dön",approxTitle:"Güncel kurla yaklaşık karşılık; mağazanın kendi kuru farklı olabilir",cmpAdd:"Karşılaştır",cmpRemove:"Karşılaştırmadan çıkar",cmpBar:"Karşılaştır",cmpTitle:"Oyun karşılaştırma",cmpFull:"En fazla 3 oyun karşılaştırabilirsin.",cmpClear:"Karşılaştırmayı temizle",cmpNeed:"Karşılaştırmak için en az 2 oyun seç.",cmpPrice:"En ucuz fiyat",cmpShop:"Mağaza",cmpRegular:"Normal fiyat",cmpAtl:"Tüm zamanların en düşüğü",cmpRating:"Steam puanı",cmpRelease:"Çıkış tarihi",cmpTags:"Kategoriler",cmpAdvice:"Öneri",cmpCheapest:"En ucuzu",endTitle:"Bu hafta biten indirimler",endSub:"Süresi dolmadan yakala",endDH:"{d} gün {h} sa kaldı",endHM:"{h} sa {m} dk kaldı",endM:"{m} dk kaldı",endDone:"İndirim bitti",freeTitle:"Şu an ücretsiz",freeSub:"Kısa süreliğine bedava; kaçırma",freeNow:"Ücretsiz",freeUntil:"{d} tarihine kadar",freeNoEnd:"Bitiş tarihi belirtilmemiş",simTitle:"Benzer oyunlar",slideOff:"-%{p} indirim",prevSlide:"Önceki oyun",nextSlide:"Sonraki oyun",
   privacy:"Gizlilik Politikası",kvkk:"KVKK Aydınlatma Metni",cookiesTitle:"Çerezler",details:"Ayrıntılar",ok:"Tamam",
   cookieText:"Bu site yalnızca çalışması için gerekli çerezleri kullanır; reklam ya da takip çerezi yoktur.",
   consentLink:"KVKK Aydınlatma Metni",noticePre:"Kişisel verilerinin nasıl işlendiğini ",noticePost:"'nde okuyabilirsin.",
@@ -642,7 +697,15 @@ const I18N={
   detailLoading:"Mağaza fiyatları yükleniyor…",detailErr:"Ayrıntılar yüklenemedi. Oyunu kapatıp tekrar aç.",
   from:"En düşük",bestNow:"Şu an en ucuz",endsOn:"İndirim bitişi",noEnd:"Belirtilmemiş",release:"Çıkış tarihi",developer:"Geliştirici",
   store:"Mağaza",price:"Fiyat",normal:"Normal",cheapest:"En ucuz",goStore:"Mağazaya git",pricesTitle:"Mağaza fiyatları",
-  chartTitle:"Son 3 ayın fiyat grafiği",fell:"3 ayda %{p} düştü",rose:"3 ayda %{p} arttı",same:"3 ayda değişmedi",
+  chartTitle:"Fiyat geçmişi",fell:"{r} %{p} düştü",rose:"{r} %{p} arttı",same:"{r} değişmedi",
+  r3m:"3 ay",r6m:"6 ay",r1y:"1 yıl",rAll:"Tümü",rIn3:"3 ayda",rIn6:"6 ayda",rIn12:"1 yılda",rIn0:"Bu dönemde",lowRange:"Bu dönemin en düşüğü",
+  advGoodT:"Almak için iyi zaman",advWaitT:"Beklemeye değer",advOkT:"Fiyat istikrarlı",advInfoT:"Öneri için veri az",
+  advAtl:"Şu anki fiyat tüm zamanların en düşüğü.",advYearLow:"Son 1 yılın en düşük fiyatına çok yakın.",
+  advWait:"Bu oyun son 1 yılda {p} fiyata (%{c} indirim) kadar düştü. Acelen yoksa indirimi bekle.",
+  advBetterSeen:"İndirimde, ama son 1 yılda {p} fiyata kadar düşmüştü. Daha iyi bir indirim gelebilir.",
+  advStable:"Fiyat son aylarda pek değişmedi; büyük bir indirim beklemek için belirgin bir sebep yok.",
+  advNoData:"Bu oyunun fiyat geçmişi henüz kısa. Öneri, geçmiş biriktikçe netleşir.",
+  advEnds:"İndirim {n} gün sonra bitiyor.",advEndsSoon:"İndirim bugün ya da yarın bitiyor.",
   noHistory:"Fiyat geçmişi birikiyor; site çalıştıkça grafik dolacak.",now:"Şu an",low3:"3 ayın en düşüğü",lowAll:"Tüm zamanların en düşüğü",today:"Bugün",
   addWish:"İstek listesine ekle",removeWish:"İstek listesinden çıkar",loginToWish:"İstek listesi için giriş yap",remove:"Çıkar",
   close:"Kapat",email:"E-posta",password:"Şifre",name:"Kullanıcı adı",register:"Kayıt ol",signin:"Giriş yap",
@@ -692,7 +755,16 @@ const I18N={
   sort_bestsellers:"Best sellers",sort_favorites:"Most wishlisted",sort_rating:"Highest rated",
   onlyDeals:"On sale only",allShops:"All stores",allCats:"All",
   profile:"Profile",pAvatar:"Profile picture",pAvatarSub:"Use the cover of a game you love as your picture.",pAvatarSearch:"Search games…",pAvatarNone:"No covers match this name.",pAvatarSaved:"Profile picture updated.",pAvatarRemove:"Remove picture",
-  pTabProfile:"Profile",pTabNotify:"Notifications",pTabSecurity:"Security",
+  pTabProfile:"Profile",pTabNotify:"Notifications",pTabSecurity:"Security",pTabAdmin:"Admin",
+  sDigest:"Weekly digest email",sDigestSub:"Once a week, sends the prices of your wishlist games in one email.",
+  aUsers:"Users",aUsersSub:"{v} verified · {n} new in 7 days",aWish:"Wishlist entries",aWishSub:"{u} users · {t} target prices",
+  aGames:"Games with prices",aGamesSub:"{s} games on sale now",aMails:"Notifications sent",aSmtpOn:"Email is set up",aSmtpOff:"No email setup (printed to terminal)",
+  aTop:"Most tracked games",aMails7:"Notifications in the last 7 days",aRecentUsers:"Newest users",aSystem:"System",aRecentMails:"Latest notifications",
+  aLastSync:"Last price update",aApi:"API usage (5 min)",aDb:"Database",aPriceRows:"price rows",aUptime:"Server up",
+  aDigestTest:"Try the weekly digest",aDigestTestSub:"Sends a sample of the weekly digest to your own address now.",aSend:"Send to me",
+  aDigestSent:"Weekly digest sent, check your inbox.",aDigestNoSmtp:"Digest built, but printed to the terminal because email isn't set up.",
+  aNeedVerify:"Verify your email address first.",aNeedWish:"Add a game to your wishlist first.",
+  kAdded:"Added to list",kDrop:"Price drop",kTarget:"Target price",kDigest:"Weekly digest",
   pName:"Display name",pNameSub:"How we address you on the site and in emails.",pEmail:"Email",pVerified:"Verified",pUnverified:"Not verified",
   pWish:"My wishlist",pWishSub:"{n} games tracked",
   pPassTitle:"Change password",pPassCur:"Current password",pPassNew:"New password",pPassSave:"Change password",pPassDone:"Password changed. You were signed out on other devices.",
@@ -707,7 +779,7 @@ const I18N={
   elsewhereTitle:"Prices in other regions",elsewhereNote:"This game has no price in your region. Cheapest prices elsewhere:",region:"Region",
   ratingLabel:"Steam rating",reviews:"{n} reviews",
   r1:"Overwhelmingly positive",r2:"Very positive",r3:"Mostly positive",r4:"Mixed",r5:"Mostly negative",r6:"Negative",
-  sStore:"Preferred store",sAutoslide:"Auto-advance the deals showcase",toTop:"Back to top",approxTitle:"Approximate amount at today's exchange rate; the store's own rate may differ",freeTitle:"Free right now",freeSub:"Free for a limited time; don't miss it",freeNow:"Free",freeUntil:"Until {d}",freeNoEnd:"No end date given",simTitle:"Similar games",slideOff:"{p}% off",prevSlide:"Previous game",nextSlide:"Next game",
+  sStore:"Preferred store",sAutoslide:"Auto-advance the deals showcase",toTop:"Back to top",approxTitle:"Approximate amount at today's exchange rate; the store's own rate may differ",cmpAdd:"Compare",cmpRemove:"Remove from compare",cmpBar:"Compare",cmpTitle:"Compare games",cmpFull:"You can compare up to 3 games.",cmpClear:"Clear comparison",cmpNeed:"Pick at least 2 games to compare.",cmpPrice:"Lowest price",cmpShop:"Store",cmpRegular:"Regular price",cmpAtl:"All-time low",cmpRating:"Steam rating",cmpRelease:"Release date",cmpTags:"Categories",cmpAdvice:"Advice",cmpCheapest:"Cheapest",endTitle:"Deals ending this week",endSub:"Grab them before they expire",endDH:"{d}d {h}h left",endHM:"{h}h {m}m left",endM:"{m}m left",endDone:"Sale ended",freeTitle:"Free right now",freeSub:"Free for a limited time; don't miss it",freeNow:"Free",freeUntil:"Until {d}",freeNoEnd:"No end date given",simTitle:"Similar games",slideOff:"{p}% off",prevSlide:"Previous game",nextSlide:"Next game",
   privacy:"Privacy Policy",kvkk:"Personal Data Notice",cookiesTitle:"Cookies",details:"Details",ok:"OK",
   cookieText:"This site only uses cookies needed for it to work; no advertising or tracking cookies.",
   consentLink:"Personal Data Notice",noticePre:"You can read how your personal data is processed in the ",noticePost:".",
@@ -734,7 +806,15 @@ const I18N={
   detailLoading:"Loading store prices…",detailErr:"Couldn't load details. Close the game and open it again.",
   from:"Lowest",bestNow:"Cheapest right now",endsOn:"Sale ends",noEnd:"Not specified",release:"Release date",developer:"Developer",
   store:"Store",price:"Price",normal:"Regular",cheapest:"Cheapest",goStore:"Go to store",pricesTitle:"Store prices",
-  chartTitle:"Price over the last 3 months",fell:"Down {p}% in 3 months",rose:"Up {p}% in 3 months",same:"Unchanged in 3 months",
+  chartTitle:"Price history",fell:"Down {p}% {r}",rose:"Up {p}% {r}",same:"Unchanged {r}",
+  r3m:"3 mo",r6m:"6 mo",r1y:"1 yr",rAll:"All",rIn3:"in 3 months",rIn6:"in 6 months",rIn12:"in a year",rIn0:"in this period",lowRange:"Low in this period",
+  advGoodT:"Good time to buy",advWaitT:"Worth waiting",advOkT:"Price is steady",advInfoT:"Not enough data yet",
+  advAtl:"The current price is the all-time low.",advYearLow:"Very close to the lowest price of the past year.",
+  advWait:"This game dropped to {p} ({c}% off) in the past year. If you're not in a hurry, wait for a sale.",
+  advBetterSeen:"It's on sale, but it went as low as {p} in the past year. A better deal may come.",
+  advStable:"The price has barely changed in recent months; no clear reason to wait for a big sale.",
+  advNoData:"This game's price history is still short. The advice gets sharper as history builds up.",
+  advEnds:"The sale ends in {n} days.",advEndsSoon:"The sale ends today or tomorrow.",
   noHistory:"Price history is building up; the chart fills in as the site runs.",now:"Now",low3:"3-month low",lowAll:"All-time low",today:"Today",
   addWish:"Add to wishlist",removeWish:"Remove from wishlist",loginToWish:"Sign in to use your wishlist",remove:"Remove",
   close:"Close",email:"Email",password:"Password",name:"Username",register:"Create account",signin:"Sign in",
@@ -794,7 +874,7 @@ const state={
   sort:store.get("g_sort","popular"),
   showAll:store.get("g_all",false),
   shop:store.get("g_shop",""),accent:store.get("g_accent","gold"),onlyDeals:false,cat:null,shops:[],cats:[],
-  autoslide:store.get("g_autoslide",true),targets:{},
+  autoslide:store.get("g_autoslide",true),targets:{},chartRange:store.get("g_range",3),compare:store.get("g_cmp",[]).slice(0,3),
   backdrop:store.get("g_bg",true),covers:null,
   q:"",letter:null,searching:false,
   user:null,wish:[],
@@ -917,7 +997,26 @@ async function loadConfig(){
   document.title=`${state.config.siteName} — ${t("tagline")}`;
   renderStats();
 }
-function load(){state.details={};loadList(true);loadDeals();loadFree();loadShops();if(state.user)loadWish()}
+function load(){state.details={};loadList(true);loadDeals();loadFree();loadEnding();loadShops();if(state.user)loadWish()}
+/* ---------- Bu hafta biten indirimler (geri sayımlı) ---------- */
+async function loadEnding(){
+  try{state.ending=remember((await api(`/api/ending?country=${countryCode()}`)).games)}catch(e){state.ending=[]}
+  renderEnding();
+}
+function leftText(iso){
+  const ms=Date.parse(iso)-Date.now();if(!(ms>0))return t("endDone");
+  const d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+  return d?t("endDH",{d,h}):h?t("endHM",{h,m}):t("endM",{m:Math.max(1,m)});
+}
+function renderEnding(){
+  const list=(state.ending||[]).filter(g=>g.low?.expiry&&Date.parse(g.low.expiry)>Date.now());
+  $("endingSec").hidden=!list.length;
+  $("endings").innerHTML=list.map(g=>`<button class="free ending" data-g="${g.id}">${cover(g)}<div style="min-width:0">
+      <h3>${esc(g.title)}</h3>${tag(g.low)}
+      <div class="ends"><span class="countdown${Date.parse(g.low.expiry)-Date.now()<864e5?" soon":""}" data-exp="${esc(g.low.expiry)}">⏱ ${leftText(g.low.expiry)}</span><br>${esc(g.low.shop)}</div></div></button>`).join("");
+}
+// geri sayımları dakikada bir güncelle
+setInterval(()=>{document.querySelectorAll(".countdown[data-exp]").forEach(el=>{el.textContent="⏱ "+leftText(el.dataset.exp)})},60_000);
 async function loadFree(){
   try{state.free=remember((await api(`/api/free?country=${countryCode()}`)).games)}catch(e){state.free=[]}
   renderFree();
@@ -1174,43 +1273,168 @@ function tiltMove(e){
 function tiltReset(e){const card=e.target.closest?.(".card");if(card){card.style.setProperty("--mx",0);card.style.setProperty("--my",0)}}
 
 /* ================= Fiyat grafiği ================= */
+/* ---------- Fiyat geçmişi grafiği (süre seçimli) ---------- */
+const RANGES=[[3,"r3m"],[6,"r6m"],[12,"r1y"],[0,"rAll"]];
+// geçmiş kayıtlar: o günün en düşük fiyatı, sadece şu anki para birimindekiler, eskiden yeniye
+function histPoints(d){
+  const lo=d.low;if(!lo)return [];
+  return d.history.filter(h=>h.currency===lo.currency).map(h=>({x:Date.parse(h.day+"T12:00:00Z"),v:h.lowest})).sort((a,b)=>a.x-b.x);
+}
 function chart(d){
   const lo=d.low;
-  if(!lo)return {svg:"",trend:"",lows:""};
-  const cur=lo.currency,DAY=864e5,end=Date.now(),start=end-92*DAY;
-  let pts=d.history.filter(h=>h.currency===cur).map(h=>({x:Date.parse(h.day+"T12:00:00Z"),v:h.lowest})).filter(p=>p.x>=start-DAY);
+  if(!lo)return {svg:"",trend:"",lows:"",range:""};
+  const cur=lo.currency,DAY=864e5,end=Date.now(),months=state.chartRange;
+  const all=histPoints(d);
+  const start=months?end-months*30.44*DAY:(all.length?all[0].x:end-92*DAY);
+  // dönemin başındaki fiyat = başlangıçtan önceki son kayıt (basamaklı çizgi o fiyattan başlar)
+  const before=all.filter(p=>p.x<start).pop();
+  const pts=all.filter(p=>p.x>=start);
+  if(before)pts.unshift({x:start,v:before.v});
   pts.push({x:end,v:lo.price});
-  pts.sort((a,b)=>a.x-b.x);
-  const lowsHtml=`<div class="lows"><span>${t("now")}: <b>${money(lo.price,cur)}</b></span>${lo.lowM3!=null?`<span>${t("low3")}: <b>${money(lo.lowM3,cur)}</b></span>`:""}${lo.lowAll!=null?`<span>${t("lowAll")}: <b>${money(lo.lowAll,cur)}</b></span>`:""}</div>`;
-  if(pts.length<2)return {svg:`<p class="note">${t("noHistory")}</p>`,trend:"",lows:lowsHtml};
-  const vals=pts.map(p=>p.v).concat(lo.lowM3!=null?[lo.lowM3]:[]);
+  const rangeLow=Math.min(...pts.map(p=>p.v));
+  const range=`<div class="seg rangeseg" role="group" aria-label="${t("chartTitle")}">${RANGES.map(([m,k])=>`<button data-range="${m}" aria-pressed="${months===m}">${t(k)}</button>`).join("")}</div>`;
+  const lowsHtml=`<div class="lows"><span>${t("now")}: <b>${money(lo.price,cur)}</b></span>${pts.length>1?`<span>${t("lowRange")}: <b>${money(rangeLow,cur)}</b></span>`:""}${lo.lowAll!=null?`<span>${t("lowAll")}: <b>${money(lo.lowAll,cur)}</b></span>`:""}</div>`;
+  if(pts.length<2)return {svg:`<p class="note">${t("noHistory")}</p>`,trend:"",lows:lowsHtml,range};
+  const vals=pts.map(p=>p.v);
   const W=600,H=230,P={l:74,r:14,t:14,b:30};
   let min=Math.min(...vals),max=Math.max(...vals);if(max===min){max+=1;min=Math.max(0,min-1)}
   min=Math.max(0,min-(max-min)*.15);max=max+(max-min)*.12;
-  const x0=pts[0].x;
-  const x=v=>P.l+(v-x0)/((end-x0)||1)*(W-P.l-P.r),y=v=>P.t+(max-v)/(max-min)*(H-P.t-P.b);
+  const x0=pts[0].x,span=(end-x0)/DAY;
+  const x=v=>P.l+(v-x0)/((end-x0)||1)*(W-P.r-P.l),y=v=>P.t+(max-v)/(max-min)*(H-P.t-P.b);
   // basamaklı çizgi: fiyat bir sonraki değişime kadar aynı kalır
   let path=`M${x(pts[0].x)},${y(pts[0].v)}`;
   for(let i=1;i<pts.length;i++)path+=` H${x(pts[i].x)} V${y(pts[i].v)}`;
   const area=`${path} V${H-P.b} H${x(pts[0].x)} Z`;
-  const mf=new Intl.DateTimeFormat(loc(),{month:"short"});
-  const ticks=[];for(let dt=new Date(x0);dt<=end;dt=new Date(dt.getFullYear(),dt.getMonth()+1,1)){const m=new Date(dt.getFullYear(),dt.getMonth(),1).getTime();if(m>=x0&&m<=end)ticks.push(m)}
-  // "Bugün" yazısıyla çakışan ay etiketini gösterme
+  // ay etiketleri: uzun dönemde 2-3 ayda bir, yıl da yazılır
+  const step=span>700?6:span>400?3:span>200?2:1;
+  const mf=new Intl.DateTimeFormat(loc(),span>330?{month:"short",year:"2-digit"}:{month:"short"});
+  const ticks=[];const t0=new Date(x0);
+  for(let dt=new Date(t0.getFullYear(),t0.getMonth()+1,1);dt.getTime()<=end;dt=new Date(dt.getFullYear(),dt.getMonth()+step,1))ticks.push(dt.getTime());
   while(ticks.length&&x(ticks[ticks.length-1])>W-P.r-60)ticks.pop();
-  const first=pts[0].v,last=lo.price,pct=first?Math.round(Math.abs(last-first)/first*100):0;
-  const trend=last<first?`<span class="trend down">↓ ${t("fell",{p:pct})}</span>`:last>first?`<span class="trend up">↑ ${t("rose",{p:pct})}</span>`:`<span class="trend">${t("same")}</span>`;
+  const first=pts[0].v,last=lo.price,pct=first?Math.round(Math.abs(last-first)/first*100):0,r=t("rIn"+months);
+  const trend=last<first?`<span class="trend down">↓ ${t("fell",{p:pct,r})}</span>`:last>first?`<span class="trend up">↑ ${t("rose",{p:pct,r})}</span>`:`<span class="trend">${t("same",{r})}</span>`;
   const gid="g"+Math.random().toString(36).slice(2,7);
+  const dots=pts.length<=60?pts:[pts[pts.length-1]];   // çok noktalı uzun dönemde sadece bugünün noktası
   const svg=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${t("chartTitle")}">
    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--coin)" stop-opacity=".35"/><stop offset="1" stop-color="var(--coin)" stop-opacity="0"/></linearGradient></defs>
    ${[max,(max+min)/2,min].map(v=>`<line x1="${P.l}" x2="${W-P.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${P.l-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${money(v,cur)}</text>`).join("")}
    ${ticks.map(m=>`<text x="${x(m)}" y="${H-8}" text-anchor="middle" font-size="12" fill="var(--muted)">${mf.format(new Date(m))}</text>`).join("")}
    <text x="${W-P.r}" y="${H-8}" text-anchor="end" font-size="12" fill="var(--muted)">${t("today")}</text>
-   ${lo.lowM3!=null?`<line x1="${P.l}" x2="${W-P.r}" y1="${y(lo.lowM3)}" y2="${y(lo.lowM3)}" stroke="var(--down)" stroke-dasharray="5 5" stroke-width="1.5"/>`:""}
+   <line x1="${P.l}" x2="${W-P.r}" y1="${y(rangeLow)}" y2="${y(rangeLow)}" stroke="var(--down)" stroke-dasharray="5 5" stroke-width="1.5"/>
    <path d="${area}" fill="url(#${gid})"/>
-   <path d="${path}" fill="none" stroke="var(--coin)" stroke-width="3" stroke-linejoin="round"/>
-   ${pts.map(p=>`<circle cx="${x(p.x)}" cy="${y(p.v)}" r="4" fill="var(--surface)" stroke="var(--coin)" stroke-width="2.5"><title>${fmtDate(p.x)}: ${money(p.v,cur)}</title></circle>`).join("")}
+   <path d="${path}" fill="none" stroke="var(--coin)" stroke-width="${pts.length>60?2:3}" stroke-linejoin="round"/>
+   ${dots.map(p=>`<circle cx="${x(p.x)}" cy="${y(p.v)}" r="4" fill="var(--surface)" stroke="var(--coin)" stroke-width="2.5"><title>${fmtDate(p.x)}: ${money(p.v,cur)}</title></circle>`).join("")}
   </svg>`;
-  return {svg,trend,lows:lowsHtml};
+  return {svg,trend,lows:lowsHtml,range};
+}
+
+/* ---------- "Şimdi al mı, bekle mi?" önerisi: fiyat geçmişine bakarak ---------- */
+// sonuç: { kind: good | wait | ok | info, head: başlık, txt: açıklama }
+function adviceData(d){
+  const lo=d?.low;if(!lo||!(lo.price>0))return null;
+  const cur=lo.currency,DAY=864e5,now=Date.now(),p=lo.price,reg=lo.regular||p;
+  const all=histPoints(d);
+  const year=all.filter(h=>h.x>=now-365*DAY);
+  const known=all.length?(now-all[0].x)/DAY:0;           // kaç günlük geçmiş var
+  const minYear=Math.min(p,...year.map(h=>h.v));
+  let kind,txt;
+  if(lo.lowAll!=null&&p<=lo.lowAll*1.01){kind="good";txt=t("advAtl")}
+  else if(lo.cut>0&&known>=60&&p<=minYear*1.03){kind="good";txt=t("advYearLow")}
+  else if(known>=60&&minYear<=p*0.85){kind="wait";txt=t(lo.cut>0?"advBetterSeen":"advWait",{p:money(minYear,cur),c:Math.round((1-minYear/reg)*100)})}
+  else if(known>=180){kind="ok";txt=t("advStable")}
+  else{kind="info";txt=t("advNoData")}
+  let ends="";
+  if(lo.cut>0&&lo.expiry){const n=Math.ceil((Date.parse(lo.expiry)-now)/DAY);if(n>=0&&n<=14)ends=" "+t(n<=1?"advEndsSoon":"advEnds",{n})}
+  const head={good:"advGoodT",wait:"advWaitT",ok:"advOkT",info:"advInfoT"}[kind];
+  return {kind,head:t(head),txt:txt+ends};
+}
+function advice(d){
+  const a=adviceData(d);
+  return a?`<div class="advice ${a.kind}" role="note"><b>${a.head}</b><span>${a.txt}</span></div>`:"";
+}
+
+/* ================= Yönetim sekmesi (sadece yönetici görür) ================= */
+const fmtBytes=b=>b>1e9?(b/1e9).toFixed(1)+" GB":b>1e6?(b/1e6).toFixed(1)+" MB":Math.round(b/1e3)+" KB";
+const fmtUptime=s=>{const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);return d?`${d}g ${h}sa`:h?`${h}sa ${m}dk`:`${m}dk`};
+const KIND_KEYS={added:"kAdded",drop:"kDrop",target:"kTarget",digest:"kDigest"};
+async function loadAdmin(){
+  let a;try{a=await api("/api/admin/stats")}catch(e){if($("adminBox"))$("adminBox").innerHTML=`<p class="note">${t("errServer")}</p>`;return}
+  const box=$("adminBox");if(!box)return;
+  const tile=(n,l,sub="")=>`<div class="atile"><b>${n}</b><span>${l}</span>${sub?`<small>${sub}</small>`:""}</div>`;
+  box.innerHTML=`
+   <div class="atiles">
+    ${tile(num(a.users.total),t("aUsers"),t("aUsersSub",{v:num(a.users.verified),n:num(a.users.new7)}))}
+    ${tile(num(a.wishlist.total),t("aWish"),t("aWishSub",{u:num(a.wishlist.users),t:num(a.wishlist.targets)}))}
+    ${tile(num(a.games.priced),t("aGames"),t("aGamesSub",{s:num(a.games.onSale)}))}
+    ${tile(num(a.mails.total),t("aMails"),a.mails.smtp?t("aSmtpOn"):t("aSmtpOff"))}
+   </div>
+   <div class="agrid">
+    <section class="panel"><h3>${t("aTop")}</h3>${a.wishlist.top.length?`<ol class="alist">${a.wishlist.top.map(g=>`<li><span>${esc(g.title)}</span><b>${num(g.n)}</b></li>`).join("")}</ol>`:`<p class="note">—</p>`}</section>
+    <section class="panel"><h3>${t("aMails7")}</h3>${a.mails.byKind.length?`<ul class="alist">${a.mails.byKind.map(k=>`<li><span>${t(KIND_KEYS[k.kind]||k.kind)}</span><b>${num(k.n)}</b></li>`).join("")}</ul>`:`<p class="note">—</p>`}</section>
+    <section class="panel"><h3>${t("aRecentUsers")}</h3>${a.recentUsers.length?`<ul class="alist">${a.recentUsers.map(u=>`<li><span>${esc(u.name)} <small class="note">${esc(u.email)}</small></span><small>${u.verified?"✓":"…"} ${fmtDate(u.createdAt.replace(" ","T")+"Z")}</small></li>`).join("")}</ul>`:`<p class="note">—</p>`}</section>
+    <section class="panel"><h3>${t("aSystem")}</h3><ul class="alist">
+      <li><span>${t("aLastSync")}</span><small>${a.system.lastSync?fmtDate(a.system.lastSync)+" "+new Date(a.system.lastSync).toLocaleTimeString(loc(),{hour:"2-digit",minute:"2-digit"}):"—"}</small></li>
+      <li><span>${t("aApi")}</span><small>${a.system.api.used} / ${a.system.api.limit}</small></li>
+      <li><span>${t("aDb")}</span><small>${fmtBytes(a.system.dbBytes)} · ${num(a.games.prices)} ${t("aPriceRows")}</small></li>
+      <li><span>${t("aUptime")}</span><small>${fmtUptime(a.system.uptimeSec)} · Node ${esc(a.system.node)}</small></li>
+    </ul></section>
+   </div>
+   <section class="panel"><h3>${t("aRecentMails")}</h3>${a.mails.recent.length?`<ul class="alist">${a.mails.recent.map(m=>`<li><span>${esc(m.text)} <small class="note">${esc(m.to)}</small></span><small>${t(KIND_KEYS[m.kind]||m.kind)}</small></li>`).join("")}</ul>`:`<p class="note">—</p>`}</section>
+   <div class="srow" style="margin-top:14px;border:1px solid var(--line);border-radius:12px"><div class="lbl"><b>${t("aDigestTest")}</b><small>${t("aDigestTestSub")}</small></div><button class="btn" id="aDigestBtn">${t("aSend")}</button></div>`;
+  $("aDigestBtn").onclick=async()=>{
+    $("aDigestBtn").disabled=true;
+    try{const r=await api("/api/admin/digest-test",{method:"POST"});toast(r.smtp?t("aDigestSent"):t("aDigestNoSmtp"))}
+    catch(e){toast(t({unverified:"aNeedVerify",emptyWish:"aNeedWish"}[e.code]||"errServer"))}
+    $("aDigestBtn").disabled=false;
+  };
+}
+
+/* ================= Oyun karşılaştırma (en fazla 3 oyun) ================= */
+const CMP_MAX=3;
+function toggleCompare(id){
+  const i=state.compare.indexOf(id);
+  if(i>=0)state.compare.splice(i,1);
+  else{if(state.compare.length>=CMP_MAX)return toast(t("cmpFull"));state.compare.push(id)}
+  store.set("g_cmp",state.compare);renderCmpBar();
+  if(isGameOpen())renderDetail(state.open);
+}
+function renderCmpBar(){
+  const bar=$("cmpBar"),list=state.compare;
+  bar.hidden=!list.length;if(!list.length)return;
+  bar.innerHTML=`<div class="cmpthumbs">${list.map(id=>{const g=state.known[id];return `<span class="cmpthumb" title="${esc(g?.title||"")}">${g?cover(g):""}</span>`}).join("")}</div>
+    <button class="btn primary" data-cmp-open ${list.length<2?"disabled":""}>${t("cmpBar")} (${list.length}/${CMP_MAX})</button>
+    <button class="x" data-cmp-clear aria-label="${t("cmpClear")}" title="${t("cmpClear")}">✕</button>`;
+}
+async function openCompare(){
+  state.open="__compare";
+  $("dlgBody").innerHTML=`<div class="dlg-head"><h2>${t("cmpTitle")}</h2><button class="x" data-close aria-label="${t("close")}">✕</button></div><p class="note">${t("detailLoading")}</p>`;
+  openDialog(true);
+  await Promise.all(state.compare.map(async id=>{
+    const key=detailKey(id);if(state.details[key]&&!state.details[key].error)return;
+    try{const d=await api(`/api/games/${encodeURIComponent(id)}?country=${countryCode()}`);state.details[key]=d.game;remember([{...d.game,tags:d.game.tags.slice(0,2)}])}
+    catch(e){state.details[key]={error:true}}
+  }));
+  if(state.open==="__compare")renderCompare();
+}
+function renderCompare(){
+  const games=state.compare.map(id=>({id,b:state.known[id]||{},d:state.details[detailKey(id)]||{}})).map(x=>({...x.b,...x.d,id:x.id,low:x.d.low||x.b.low}));
+  if(games.length<2){$("dlgBody").innerHTML=`<div class="dlg-head"><h2>${t("cmpTitle")}</h2><button class="x" data-close aria-label="${t("close")}">✕</button></div><p class="note">${t("cmpNeed")}</p>`;return}
+  // en ucuzu: aynı para birimindeki fiyatlar arasında
+  const priced=games.filter(g=>g.low);const sameCur=priced.every(g=>g.low.currency===priced[0]?.low.currency);
+  const cheapest=sameCur&&priced.length>1?Math.min(...priced.map(g=>g.low.price)):null;
+  const row=(label,f)=>`<tr><th scope="row">${label}</th>${games.map(g=>`<td>${f(g)}</td>`).join("")}</tr>`;
+  $("dlgBody").innerHTML=`<div class="dlg-head"><h2>${t("cmpTitle")}</h2><button class="x" data-close aria-label="${t("close")}">✕</button></div>
+   <div class="tbl-wrap"><table class="cmp"><thead><tr><th></th>${games.map(g=>`<th scope="col"><button class="cmpcov" data-g="${g.id}">${cover(g)}<b>${esc(g.title)}</b></button>
+     <button class="linkbtn" data-cmp="${g.id}">${t("cmpRemove")}</button></th>`).join("")}</tr></thead><tbody>
+    ${row(t("cmpPrice"),g=>g.low?`${tag(g.low)}${cheapest!=null&&g.low.price===cheapest?` <span class="badge">${t("cmpCheapest")}</span>`:""}`:`<span class="note">${t(g.free?"freeGame":"noPrice")}</span>`)}
+    ${row(t("cmpShop"),g=>g.low?esc(g.low.shop):"—")}
+    ${row(t("cmpRegular"),g=>g.low?money(g.low.regular,g.low.currency):"—")}
+    ${row(t("cmpAtl"),g=>g.low?.lowAll!=null?`${money(g.low.lowAll,g.low.currency)}${isATL(g.low)?` ${atlBadge(g.low)}`:""}`:"—")}
+    ${row(t("cmpAdvice"),g=>{const a=g.history?adviceData(g):null;return a?`<span class="advtag ${a.kind}">${a.head}</span>`:"—"})}
+    ${row(t("cmpRating"),g=>g.rating?rateBadge(g.rating,true):"—")}
+    ${row(t("cmpRelease"),g=>g.releaseDate?fmtDate(g.releaseDate):"—")}
+    ${row(t("cmpTags"),g=>(g.tags||[]).slice(0,4).map(esc).join(", ")||"—")}
+   </tbody></table></div>`;
 }
 
 /* ================= Oyun sayfası ================= */
@@ -1296,7 +1520,7 @@ function renderDetail(id){
        ${d.elsewhere.map(e=>`<tr><td>${esc(regionName(e.country))}</td><td>${esc(e.shop)}</td><td>${tag({price:e.price,currency:e.currency,cut:e.cut},false)}</td></tr>`).join("")}</tbody></table></div>`
      :`<p class="note">${t(g.free?"freeGame":g.pending?"pendingPrice":"noPrice")}</p>`;
     const c=chart(d);
-    if(c.svg||c.lows)chartPanel=`<div class="panel"><h3>${t("chartTitle")}</h3>${c.trend}${c.svg}${c.lows}</div>`;
+    if(c.svg||c.lows)chartPanel=`<div class="panel"><div class="panelhead"><h3>${t("chartTitle")}</h3>${c.range}</div>${c.trend}${c.svg}${c.lows}</div>`;
     if(d.requirements)chartPanel+=reqPanel(d.requirements);
   }
   $("dlgBody").innerHTML=`
@@ -1314,9 +1538,10 @@ function renderDetail(id){
       ${low?`<div><div class="lbl">${t("bestNow")}, ${esc(low.shop)}</div>${tag(low)}${isATL(low)?` ${atlBadge(low,true)}`:""}</div>`
         :g.other?`<div><div class="lbl">${t("noPrice")}</div><div class="elsewhere note" style="margin:4px 0 0">${t("elsewhereCard",{c:esc(regionName(g.other.country)),p:`<b>${money(g.other.price,g.other.currency)}</b>`})}</div></div>`
         :`<div class="lbl">${t(g.free?"freeGame":"noPrice")}</div>`}
-      <div class="actions">${wishBtn}</div>
+      <div class="actions">${wishBtn}<button class="btn" data-cmp="${id}">${state.compare.includes(id)?"✓ "+t("cmpRemove"):"⇄ "+t("cmpAdd")}</button></div>
       ${state.user&&inWish?targetForm(id,low):""}
      </div>
+     ${ok?advice(d):""}
     </div>
    </div>
    <div class="dgrid"><div class="panel"><h3>${t("pricesTitle")}</h3>${prices}</div>${chartPanel?`<div class="dcol">${chartPanel}</div>`:""}</div>
@@ -1524,7 +1749,8 @@ function openProfile(tab){
   const u=state.user;if(!u)return openAuth("in");
   if(tab)profileTab=tab;
   state.open="__profile";
-  const tabs=[["profile","pTabProfile"],["notify","pTabNotify"],["security","pTabSecurity"]];
+  const tabs=[["profile","pTabProfile"],["notify","pTabNotify"],["security","pTabSecurity"],...(u.isAdmin?[["admin","pTabAdmin"]]:[])];
+  if(profileTab==="admin"&&!u.isAdmin)profileTab="profile";
   let body="";
   if(profileTab==="profile"){
     body=`<section class="sgroup"><h3>${t("pAvatar")}</h3><p class="note" style="margin:0 0 0 4px">${t("pAvatarSub")}</p>
@@ -1540,8 +1766,11 @@ function openProfile(tab){
   }else if(profileTab==="notify"){
     body=sgroup(t("sNotify"),
        srow(t("sDrops"),t("sDropsSub"),sw("pDrops",u.notifyDrops),"pDrops")
-      +srow(t("sMinCut"),t("sMinCutSub"),`<select class="select" id="pMinCut" ${u.notifyDrops?"":"disabled"}>${[0,25,50,75].map(c=>`<option value="${c}" ${c===u.minCut?"selected":""}>${c?"%"+c+"+":t("anyCut")}</option>`).join("")}</select>`,"pMinCut"))
+      +srow(t("sMinCut"),t("sMinCutSub"),`<select class="select" id="pMinCut" ${u.notifyDrops?"":"disabled"}>${[0,25,50,75].map(c=>`<option value="${c}" ${c===u.minCut?"selected":""}>${c?"%"+c+"+":t("anyCut")}</option>`).join("")}</select>`,"pMinCut")
+      +srow(t("sDigest"),t("sDigestSub"),sw("pDigest",u.weeklyDigest),"pDigest"))
       +`<div style="margin-top:14px">${verifyNotice()}</div>`;
+  }else if(profileTab==="admin"){
+    body=`<div id="adminBox"><p class="note">${t("loading")}</p></div>`;
   }else{
     body=sgroup(t("pPassTitle"),`<div class="srow form" style="display:block">
         <label for="pCur" style="margin-top:0">${t("pPassCur")}</label><input type="password" id="pCur" autocomplete="current-password">
@@ -1569,7 +1798,10 @@ function openProfile(tab){
     if($("avRemove"))$("avRemove").onclick=async()=>{if(await patch({avatar:null}))openProfile()};
     $("pNameSave").onclick=async()=>{if(await patch({name:$("pName").value}))openProfile()};
     $("pWish").onclick=openWish;
+  }else if(profileTab==="admin"){
+    loadAdmin();
   }else if(profileTab==="notify"){
+    $("pDigest").onchange=e=>patch({weeklyDigest:e.target.checked});
     $("pDrops").onchange=async e=>{await patch({notifyDrops:e.target.checked});$("pMinCut").disabled=!e.target.checked};
     $("pMinCut").onchange=e=>patch({minCut:Number(e.target.value)});
   }else{
@@ -1586,7 +1818,7 @@ function openProfile(tab){
       catch(e){$("sDelErr").textContent=authErr(e.code)}
     };
   }
-  openDialog(false);
+  openDialog(profileTab==="admin");
 }
 function setCurrency(c){
   state.cur=c;store.set("g_cur",c);renderControls();load();
@@ -1687,6 +1919,10 @@ document.addEventListener("click",e=>{
   const sl=e.target.closest("[data-slide]");if(sl){goSlide(slideIdx+Number(sl.dataset.slide));startSlides();return}
   const dt=e.target.closest("[data-dot]");if(dt){goSlide(Number(dt.dataset.dot));startSlides();return}
   const g=e.target.closest("[data-g]");if(g)return openGame(g.dataset.g);
+  const cm=e.target.closest("[data-cmp]");if(cm){toggleCompare(cm.dataset.cmp);if(state.open==="__compare")renderCompare();return}
+  if(e.target.closest("[data-cmp-open]"))return openCompare();
+  if(e.target.closest("[data-cmp-clear]")){state.compare=[];store.set("g_cmp",[]);renderCmpBar();return}
+  const rg=e.target.closest("[data-range]");if(rg){state.chartRange=Number(rg.dataset.range);store.set("g_range",state.chartRange);if(isGameOpen())renderDetail(state.open);return}
   const cl=e.target.closest("[data-copy-link]");if(cl)return copyGameLink(cl.dataset.copyLink);
   if(e.target.closest("[data-close]"))return dlg.close();
   if(e.target.closest("[data-close2]"))return $("dlg2").close();
@@ -1825,6 +2061,7 @@ load();
 loadUser().then(async()=>{const handled=await handleLinks()||await openFromPath();if(!handled)maybeWelcome();maybeCookieBar()});
 loadCats();
 setTimeout(renderBackdrop,400);
+setTimeout(renderCmpBar,800);
 // açık sayfada fiyatları 10 dk'da bir tazele (kullanıcı listede aşağı inmemişse)
 setInterval(()=>{if(state.status==="ok"&&!dlg.open&&state.page===0){state.details={};loadList(true);loadDeals()}},10*60_000);
 </script>

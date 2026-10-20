@@ -12,9 +12,11 @@ import {
   createEmailToken, consumeEmailToken, destroyUserSessions,
 } from "./auth.js";
 import { sendAccountMail } from "./accountmail.js";
-import { notifyAdded } from "./notify.js";
+import { notifyAdded, sendWeeklyDigests } from "./notify.js";
 import { checkShops, purgeBlocked } from "./shops.js";
 import { refreshRates, currentRates } from "./rates.js";
+import { usage as itadUsage, RATE_LIMIT as ITAD_LIMIT } from "./itad.js";
+import fs from "node:fs";
 
 const app = express();
 // Tünel (Cloudflare) ya da nginx gibi aynı bilgisayardaki bir aracıdan gelen isteklerde ziyaretçinin gerçek adresini kullan.
@@ -222,6 +224,25 @@ app.get("/api/free", (req, res) => {
   res.json(data);
 });
 
+// Bu hafta biten indirimler: önümüzdeki 7 gün içinde süresi dolacak indirimler, en yakın biten önce.
+// Rastgele ucuz oyunlar dolmasın diye sadece bilinen oyunlar (popüler, çok satan ya da çok değerlendirilmiş).
+const endingCache = new Map();
+app.get("/api/ending", (req, res) => {
+  const country = validCountry(req);
+  if (!country) return res.status(400).json({ code: "country" });
+  const hit = endingCache.get(country);
+  if (hit && Date.now() - hit.at < 10 * 60_000) return res.json(hit.data);
+  const rows = db.prepare(`SELECT ${GAME_COLS}, ${LOW_COLS}, NULL AS other FROM games g
+    JOIN lows l ON l.game_id = g.id AND l.country = ?
+    WHERE g.hidden = 0 AND l.cut > 0 AND l.price > 0 AND l.expiry IS NOT NULL
+      AND datetime(l.expiry) > datetime('now') AND datetime(l.expiry) <= datetime('now', '+7 days')
+      AND (g.popular_rank IS NOT NULL OR g.collected_rank IS NOT NULL OR COALESCE(g.rating_pos, 0) + COALESCE(g.rating_neg, 0) >= 500)
+    ORDER BY datetime(l.expiry), l.cut DESC LIMIT 12`).all(country);
+  const data = { games: rows.map(listItem) };
+  endingCache.set(country, { at: Date.now(), data });
+  res.json(data);
+});
+
 // Benzer oyunlar: ortak etiketi en çok olan, fiyatı belli oyunlar (çok genel etiketler sayılmaz)
 const GENERIC_TAGS = ["Indie", "Singleplayer", "Multiplayer", "Casual", "Free to Play", "Early Access", "Great Soundtrack", "Atmospheric", "2D", "3D", "Colorful"];
 const simCache = new Map();
@@ -328,8 +349,17 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const cleanCountry = (c) => (COUNTRIES.includes(String(c).toUpperCase()) ? String(c).toUpperCase() : "US");
 const cleanLang = (l) => (l === "en" ? "en" : "tr");
 const qAvatar = db.prepare("SELECT id, title, boxart, appid FROM games WHERE id = ?");
+// Yönetici: .env'deki ADMIN_EMAILS (virgülle birden fazla), boşsa SUPPORT_EMAIL
+const ADMINS = String(process.env.ADMIN_EMAILS || process.env.SUPPORT_EMAIL || "").toLowerCase().split(",").map((s) => s.trim()).filter(Boolean);
+const isAdmin = (u) => !!u && ADMINS.includes(String(u.email).toLowerCase());
+function requireAdmin(req, res, next) {
+  if (!req.user) return res.status(401).json({ code: "login" });
+  if (!isAdmin(req.user)) return res.status(403).json({ code: "forbidden" });
+  next();
+}
 const publicUser = (u) => ({ email: u.email, name: u.name, country: u.country, lang: u.lang,
-  notifyDrops: u.notify_drops !== 0, minCut: u.min_cut ?? 0, emailVerified: !!u.email_verified,
+  notifyDrops: u.notify_drops !== 0, minCut: u.min_cut ?? 0, emailVerified: !!u.email_verified, weeklyDigest: u.weekly_digest !== 0,
+  isAdmin: isAdmin(u),
   avatar: u.avatar ? { ...(qAvatar.get(u.avatar) ?? {}) } : null });
 
 app.post("/api/auth/register", async (req, res) => {
@@ -454,6 +484,7 @@ app.patch("/api/me", requireUser, (req, res) => {
   if (req.body.lang) db.prepare("UPDATE users SET lang = ? WHERE id = ?").run(cleanLang(req.body.lang), req.user.id);
   if (typeof req.body.notifyDrops === "boolean") db.prepare("UPDATE users SET notify_drops = ? WHERE id = ?").run(req.body.notifyDrops ? 1 : 0, req.user.id);
   if ([0, 25, 50, 75].includes(req.body.minCut)) db.prepare("UPDATE users SET min_cut = ? WHERE id = ?").run(req.body.minCut, req.user.id);
+  if (typeof req.body.weeklyDigest === "boolean") db.prepare("UPDATE users SET weekly_digest = ? WHERE id = ?").run(req.body.weeklyDigest ? 1 : 0, req.user.id);
   if (typeof req.body.name === "string" && req.body.name.trim()) db.prepare("UPDATE users SET name = ? WHERE id = ?").run(req.body.name.trim().slice(0, 40), req.user.id);
   if (req.body.avatar === null) db.prepare("UPDATE users SET avatar = NULL WHERE id = ?").run(req.user.id);
   else if (typeof req.body.avatar === "string" && qAvatar.get(req.body.avatar)) db.prepare("UPDATE users SET avatar = ? WHERE id = ?").run(req.body.avatar, req.user.id);
@@ -501,6 +532,61 @@ app.delete("/api/wishlist/:gameId", requireUser, (req, res) => {
   res.json({ ok: true });
 });
 
+/* ---------- Yönetim sayfası (sadece yönetici) ---------- */
+const maskEmail = (e) => String(e).replace(/^(.)(.*)(@.*)$/, (_, a, b, c) => a + "*".repeat(Math.min(b.length, 6)) + c);
+const started = Date.now();
+app.get("/api/admin/stats", requireAdmin, (_req, res) => {
+  const one = (sql, ...a) => db.prepare(sql).get(...a);
+  const n = (sql, ...a) => one(sql, ...a)?.n ?? 0;
+  const dbFile = process.env.DB_PATH || "ganimet.db";
+  const size = [dbFile, dbFile + "-wal"].reduce((s, f) => { try { return s + fs.statSync(f).size; } catch { return s; } }, 0);
+  res.json({
+    users: {
+      total: n("SELECT COUNT(*) AS n FROM users"),
+      verified: n("SELECT COUNT(*) AS n FROM users WHERE email_verified = 1"),
+      new7: n("SELECT COUNT(*) AS n FROM users WHERE created_at >= datetime('now', '-7 days')"),
+      online: n("SELECT COUNT(DISTINCT user_id) AS n FROM sessions WHERE expires_at > datetime('now')"),
+      digestOn: n("SELECT COUNT(*) AS n FROM users WHERE weekly_digest = 1 AND email_verified = 1"),
+    },
+    wishlist: {
+      total: n("SELECT COUNT(*) AS n FROM wishlist"),
+      users: n("SELECT COUNT(DISTINCT user_id) AS n FROM wishlist"),
+      targets: n("SELECT COUNT(*) AS n FROM wishlist WHERE target_price IS NOT NULL"),
+      top: db.prepare(`SELECT g.title, COUNT(*) AS n FROM wishlist w JOIN games g ON g.id = w.game_id
+        GROUP BY w.game_id ORDER BY n DESC, g.title LIMIT 5`).all().map((r) => ({ ...r })),
+    },
+    games: {
+      total: n("SELECT COUNT(*) AS n FROM games WHERE hidden = 0"),
+      priced: n("SELECT COUNT(*) AS n FROM games WHERE hidden = 0 AND last_priced IS NOT NULL"),
+      prices: n("SELECT COUNT(*) AS n FROM prices"),
+      history: n("SELECT COUNT(*) AS n FROM price_history"),
+      onSale: n("SELECT COUNT(DISTINCT game_id) AS n FROM lows WHERE cut > 0"),
+    },
+    mails: {
+      total: n("SELECT COUNT(*) AS n FROM notifications"),
+      byKind: db.prepare(`SELECT kind, COUNT(*) AS n FROM notifications WHERE sent_at >= datetime('now', '-7 days')
+        GROUP BY kind ORDER BY n DESC`).all().map((r) => ({ ...r })),
+      recent: db.prepare(`SELECT n.kind, n.text, n.sent_at, u.email FROM notifications n JOIN users u ON u.id = n.user_id
+        ORDER BY n.id DESC LIMIT 8`).all().map((r) => ({ kind: r.kind, text: r.text, sentAt: r.sent_at, to: maskEmail(r.email) })),
+      smtp: !!process.env.SMTP_HOST,
+    },
+    recentUsers: db.prepare("SELECT name, email, created_at, email_verified FROM users ORDER BY id DESC LIMIT 5").all()
+      .map((u) => ({ name: u.name, email: maskEmail(u.email), createdAt: u.created_at, verified: !!u.email_verified })),
+    system: {
+      lastSync: qMeta.get()?.value ?? null, ratesAt: currentRates().updatedAt, api: { used: itadUsage(), limit: ITAD_LIMIT },
+      dbBytes: size, uptimeSec: Math.round((Date.now() - started) / 1000), node: process.version,
+    },
+  });
+});
+// Haftalık özetin bir örneğini hemen yöneticinin kendisine gönder (deneme için)
+app.post("/api/admin/digest-test", requireAdmin, async (req, res) => {
+  const user = db.prepare("SELECT email_verified FROM users WHERE id = ?").get(req.user.id);
+  if (!user?.email_verified) return res.status(400).json({ code: "unverified" });
+  if (!db.prepare("SELECT 1 FROM wishlist WHERE user_id = ?").get(req.user.id)) return res.status(400).json({ code: "emptyWish" });
+  const sent = await sendWeeklyDigests({ force: true, onlyUserId: req.user.id });
+  res.json({ sent, smtp: !!process.env.SMTP_HOST });
+});
+
 app.get("/api/notifications", requireUser, (req, res) => {
   res.json({ items: db.prepare("SELECT kind, text, sent_at FROM notifications WHERE user_id = ? ORDER BY id DESC LIMIT 20").all(req.user.id) });
 });
@@ -515,7 +601,7 @@ let running = false;
 async function tick() {
   if (running) return;
   running = true;
-  try { await refreshRates(); purgeBlocked(); await runSync(); cleanupSessions(); await checkShops(); startBackgroundWork(); }
+  try { await refreshRates(); purgeBlocked(); await runSync(); await sendWeeklyDigests(); cleanupSessions(); await checkShops(); startBackgroundWork(); }
   catch (e) { console.error("Senkronizasyon hatası:", [e.message, e.cause?.code].filter(Boolean).join(" — "), e.cause?.code ? "(internet bağlantısını ya da güvenlik duvarını kontrol et)" : ""); }
   finally { running = false; }
 }

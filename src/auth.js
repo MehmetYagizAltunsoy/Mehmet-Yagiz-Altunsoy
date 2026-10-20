@@ -34,7 +34,7 @@ export function sessionCookie(token, maxAge = SESSION_MAX_AGE) {
   return `sid=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${maxAge}${secure}`;
 }
 
-const qSession = db.prepare(`SELECT u.id, u.email, u.name, u.country, u.lang, u.notify_drops, u.min_cut, u.email_verified, u.avatar
+const qSession = db.prepare(`SELECT u.id, u.email, u.name, u.country, u.lang, u.notify_drops, u.min_cut, u.email_verified, u.avatar, u.weekly_digest
   FROM sessions s JOIN users u ON u.id = s.user_id
   WHERE s.token = ? AND s.expires_at > datetime('now')`);
 
