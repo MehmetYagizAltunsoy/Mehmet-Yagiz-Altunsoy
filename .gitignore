@@ -16,3 +16,6 @@ Thumbs.db
 .idea/
 *.log
 npm-debug.log*
+
+# Günlük veri tabanı yedekleri
+yedek/

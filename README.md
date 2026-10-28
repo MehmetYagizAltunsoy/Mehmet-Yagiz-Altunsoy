@@ -117,3 +117,7 @@ fiyatavi/
 ## Veri kaynakları
 
 Fiyat, oyun bilgisi, kapak, puan ve fragman verileri [IsThereAnyDeal](https://isthereanydeal.com), Steam ve [SteamSpy](https://steamspy.com) üzerinden alınır. Oyun adları, kapak görselleri ve markalar sahiplerine aittir. Bu proje Valve, IsThereAnyDeal veya adı geçen mağazalarla bağlantılı değildir.
+
+## Yayına alma
+
+Siteyi ücretsiz bir sunucuda (Oracle Cloud Always Free) HTTPS ile yayınlamak için adım adım rehber: [YAYINLAMA.md](YAYINLAMA.md). Kurulum ve güncelleme betikleri `deploy/` klasöründe.

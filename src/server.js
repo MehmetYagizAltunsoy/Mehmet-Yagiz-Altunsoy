@@ -23,11 +23,84 @@ const app = express();
 // Sadece bu bilgisayardan (loopback) gelen aracıya güvenilir; dışarıdan sahte başlık gönderilerek kandırılamaz.
 app.set("trust proxy", "loopback");
 const root = path.dirname(fileURLToPath(import.meta.url));
+const PROD = process.env.NODE_ENV === "production";
+const SITE_URL = (process.env.SITE_URL || `http://localhost:${process.env.PORT || 3000}`).replace(/\/$/, "");
+
+// Güvenlik başlıkları: site başka sitelerin içine gömülemez, tarayıcı dosya türünü tahmin etmez,
+// sayfa sadece izin verilen yerlerden kod/yazı tipi yükler. Görseller ve fragmanlar mağaza sunucularından gelir.
+app.use((_req, res, next) => {
+  res.set({
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    "Content-Security-Policy": [
+      "default-src 'self'", "script-src 'self' 'unsafe-inline'", "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com", "img-src 'self' data: https:", "media-src 'self' https:",
+      "connect-src 'self'", "frame-ancestors 'none'", "base-uri 'self'", "form-action 'self'", "object-src 'none'",
+    ].join("; "),
+  });
+  if (PROD) res.set("Strict-Transport-Security", "max-age=31536000");
+  next();
+});
 app.use(express.json({ limit: "10kb" }));
 app.use(attachUser);
-app.use(express.static(path.join(root, "..", "public")));
+
+// Sayfa: paylaşım önizlemesi (Instagram, WhatsApp, Discord…) için başlık ve görseli sunucuda doldurur.
+// Oyun adresinde (/oyun/<kısa ad>) önizlemede o oyunun adı, fiyatı ve kapağı görünür.
+const INDEX = fs.readFileSync(path.join(root, "..", "public", "index.html"), "utf8");
+const escAttr = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function page(og = {}) {
+  const title = og.title || "Fiyatavı — Türk oyuncular için oyun fiyat karşılaştırma";
+  const desc = og.desc || "Steam, Epic, GOG ve diğer mağazalardaki fiyatları TL olarak karşılaştır, en ucuzunu bul, fiyatı düşünce haber al.";
+  const img = og.image || `${SITE_URL}/og.png`;
+  const big = !og.image || og.wide;
+  const tags = `<!--OG-->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fiyatavı">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:url" content="${escAttr(SITE_URL + (og.path || "/"))}">
+<meta property="og:title" content="${escAttr(title)}">
+<meta property="og:description" content="${escAttr(desc)}">
+<meta property="og:image" content="${escAttr(img)}">
+${big ? '<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">' : ""}
+<meta name="twitter:card" content="${big ? "summary_large_image" : "summary"}">
+<meta name="theme-color" content="#13152A">
+<link rel="canonical" href="${escAttr(SITE_URL + (og.path || "/"))}">
+<!--/OG-->`;
+  return INDEX.replace(/<!--OG-->[\s\S]*?<!--\/OG-->/, tags);
+}
+const sendPage = (res, og) => res.type("html").set("Cache-Control", "no-cache").send(page(og));
+app.get(["/", "/index.html"], (_req, res) => sendPage(res));
+app.use(express.static(path.join(root, "..", "public"), { index: false }));
 // Paylaşılabilir oyun adresi: /oyun/<kısa ad>. Sayfa aynı, oyunu tarayıcıdaki kod açar.
-app.get("/oyun/:key", (_req, res) => res.sendFile(path.join(root, "..", "public", "index.html")));
+app.get("/oyun/:key", (req, res) => {
+  const k = String(req.params.key).slice(0, 200);
+  const g = db.prepare("SELECT id, slug, title, appid, boxart FROM games WHERE (slug = ? OR id = ?) AND hidden = 0").get(k, k);
+  if (!g) return sendPage(res);
+  const lo = db.prepare("SELECT shop, price, regular, cut, currency FROM lows WHERE game_id = ? AND country = 'TR'").get(g.id);
+  const tl = (v) => new Intl.NumberFormat("tr-TR", { style: "currency", currency: lo?.currency || "TRY" }).format(v);
+  const desc = lo
+    ? (lo.cut > 0 ? `En ucuz: ${tl(lo.price)} (${lo.shop}, %${lo.cut} indirim, normalde ${tl(lo.regular)}).` : `En ucuz: ${tl(lo.price)} (${lo.shop}).`) + " Fiyatı düşünce haber almak için takibe al."
+    : "Bu oyunun mağaza fiyatlarını karşılaştır, fiyatı düşünce haber al.";
+  const image = g.appid ? `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${g.appid}/header.jpg` : g.boxart || null;
+  sendPage(res, { title: `${g.title} — Fiyatavı`, desc, image, wide: !!g.appid, path: `/oyun/${encodeURIComponent(g.slug || g.id)}` });
+});
+
+// Arama motorları için
+app.get("/robots.txt", (_req, res) => res.type("text/plain").send(`User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${SITE_URL}/sitemap.xml\n`));
+let sitemapCache = { at: 0, xml: "" };
+app.get("/sitemap.xml", (_req, res) => {
+  if (Date.now() - sitemapCache.at > 6 * 3_600_000) {
+    const rows = db.prepare(`SELECT slug FROM games WHERE hidden = 0 AND slug IS NOT NULL
+      ORDER BY popular_rank IS NULL, popular_rank, owners IS NULL, owners DESC LIMIT 5000`).all();
+    const urls = [`${SITE_URL}/`, ...rows.map((r) => `${SITE_URL}/oyun/${encodeURIComponent(r.slug)}`)];
+    sitemapCache = { at: Date.now(), xml: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `<url><loc>${escAttr(u)}</loc></url>`).join("\n")}\n</urlset>\n` };
+  }
+  res.type("application/xml").send(sitemapCache.xml);
+});
+// Sunucunun ayakta olup olmadığını kontrol etmek için (izleme servisleri kullanır)
+app.get("/api/health", (_req, res) => { db.prepare("SELECT 1").get(); res.json({ ok: true, uptime: Math.round(process.uptime()) }); });
 
 /* ---------- Oyunlar ve fiyatlar ---------- */
 const PAGE_SIZE = 60;
@@ -604,9 +677,26 @@ let running = false;
 async function tick() {
   if (running) return;
   running = true;
-  try { await refreshRates(); purgeBlocked(); await runSync(); await sendWeeklyDigests(); cleanupSessions(); await checkShops(); startBackgroundWork(); }
+  try { dailyBackup(); await refreshRates(); purgeBlocked(); await runSync(); await sendWeeklyDigests(); cleanupSessions(); await checkShops(); startBackgroundWork(); }
   catch (e) { console.error("Senkronizasyon hatası:", [e.message, e.cause?.code].filter(Boolean).join(" — "), e.cause?.code ? "(internet bağlantısını ya da güvenlik duvarını kontrol et)" : ""); }
   finally { running = false; }
+}
+
+// Günlük veri tabanı yedeği: yedek/ klasörüne tarihli kopya; son 7 gün tutulur.
+// VACUUM INTO, site çalışırken bile tutarlı bir kopya alır.
+function dailyBackup() {
+  const dir = process.env.BACKUP_DIR || "yedek";
+  if (process.env.BACKUP_DIR === "off") return;
+  const day = new Date().toISOString().slice(0, 10);
+  const file = path.join(dir, `ganimet-${day}.db`);
+  if (fs.existsSync(file)) return;
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+    db.exec(`VACUUM INTO '${file.replace(/'/g, "''")}'`);
+    const old = fs.readdirSync(dir).filter((f) => /^ganimet-\d{4}-\d{2}-\d{2}\.db$/.test(f)).sort().slice(0, -7);
+    for (const f of old) fs.unlinkSync(path.join(dir, f));
+    console.log(`  yedek alındı: ${file}`);
+  } catch (e) { console.error("  yedek alınamadı:", e.message); }
 }
 
 const port = Number(process.env.PORT || 3000);

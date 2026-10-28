@@ -1,0 +1,6 @@
+# Caddy, alan adı için ücretsiz HTTPS sertifikasını kendisi alır ve yeniler.
+# Gelen istekleri aynı bilgisayardaki siteye (3000 numaralı kapı) iletir.
+ALAN_ADI {
+	encode gzip
+	reverse_proxy 127.0.0.1:3000
+}

@@ -1,0 +1,22 @@
+[Unit]
+Description=Fiyatavı oyun fiyat karşılaştırma sitesi
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=fiyatavi
+WorkingDirectory=/opt/fiyatavi
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node --no-warnings src/server.js
+Restart=always
+RestartSec=5
+# Güvenlik: site sadece kendi klasörüne yazabilir
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/fiyatavi
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
